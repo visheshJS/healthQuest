@@ -1,0 +1,9 @@
+[
+    {
+        "id": 9,
+        "topic": "Physiology",
+        "question": "Which neurotransmitter is released by postganglionic sympathetic neurons?",
+        "options": ["Acetylcholine", "Dopamine", "Norepinephrine", "Epinephrine"],
+        "answer": "Norepinephrine"
+    }
+]

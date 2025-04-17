@@ -1,0 +1,22 @@
+[
+    {
+        "id": 47,
+        "topic": "Surgery",
+        "question": "What is the first-line treatment for a patient presenting with acute cholecystitis?",
+        "options": [
+            "Cholecystectomy",
+            "Antibiotics",
+            "Biliary drainage",
+            "Laparotomy"
+        ],
+        "answer": "Cholecystectomy"
+    },
+    {
+        "id": 48,
+        "topic": "Surgery",
+        "question": "Which of the following conditions requires emergent surgical intervention due to a risk of bowel perforation?",
+        "options": [
+            "Appendicitis",
+            "Irritable bowel syndrome",
+            "Colorectal cancer",
+            "Crohn's disease"], "answer": "Appendicitis"}, {"id": 49, "topic": "Surgery", "question": "Which of the following is the most common complication of a coronary artery bypass graft surgery?", "options": ["Infection", "Graft failure", "Arrhythmia", "Bleeding"], "answer": "Arrhythmia"}, {"id": 50, "topic": "Surgery", "question": "What is the hallmark of acute pancreatitis on imaging?", "options": ["Pancreatic calcifications", "Enlarged gallbladder", "Peripancreatic fluid collection", "Dilated bile ducts"], "answer": "Peripancreatic fluid collection"}]
