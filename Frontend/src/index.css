@@ -47,6 +47,10 @@
     --input: 142 30% 25%;
     --ring: 142 70% 50%;
   }
+
+  body {
+    @apply antialiased;
+  }
 }
 
 @layer base {
@@ -99,9 +103,11 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -142,7 +148,7 @@
 }
 
 .animate-fadeIn {
-  animation: fadeIn 1s ease-in-out;
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
 .animate-slideIn {
@@ -173,6 +179,22 @@
   .game-button:hover {
     box-shadow: 0 0 25px rgba(80, 250, 123, 0.8);
   }
+
+  .quiz-option {
+    @apply transition-all duration-300 transform hover:scale-102;
+  }
+  
+  .quiz-option.correct {
+    @apply bg-green-500;
+  }
+  
+  .quiz-option.incorrect {
+    @apply bg-red-500;
+  }
+  
+  .quiz-option.disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
 }
 
 .pixel-corners {
@@ -200,4 +222,20 @@
   width: 100%;
   height: 100%;
   z-index: 0;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.progress-bar {
+  transition: width 0.5s ease-in-out;
+}
+
+.health-indicator {
+  transition: all 0.3s ease-in-out;
+}
+
+.option-button {
+  transition: all 0.3s ease-in-out;
 } 

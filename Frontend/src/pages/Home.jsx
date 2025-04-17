@@ -14,7 +14,7 @@ function Home() {
               <Gamepad className="w-6 h-6 text-green-300" />
             </div>
             <h1 className="text-3xl font-russo text-green-300 tracking-wider">
-              HEALTH<span className="text-white">BT</span>
+              HEALTH<span className="text-white">QUEST</span>
             </h1>
           </div>
           <div className="flex gap-4">

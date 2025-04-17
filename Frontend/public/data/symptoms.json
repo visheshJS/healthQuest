@@ -1,0 +1,318 @@
+[
+    {
+      "id": 1,
+      "topic": "Anatomy",
+      "case": "Patient has wrist drop after mid-shaft humerus fracture.",
+      "options": ["Ulnar nerve injury", "Radial nerve injury", "Median nerve injury", "Axillary nerve injury"],
+      "answer": "Radial nerve injury"
+    },
+    {
+      "id": 2,
+      "topic": "Anatomy",
+      "case": "Patient can’t abduct shoulder beyond 15°.",
+      "options": ["Supraspinatus injury", "Deltoid paralysis", "Infraspinatus tear", "Subscapularis damage"],
+      "answer": "Deltoid paralysis"
+    },
+    {
+      "id": 3,
+      "topic": "Anatomy",
+      "case": "Numbness over lateral thigh in obese patient wearing tight belt.",
+      "options": ["Femoral neuropathy", "Lateral femoral cutaneous nerve entrapment", "Obturator nerve injury", "Sciatic neuropathy"],
+      "answer": "Lateral femoral cutaneous nerve entrapment"
+    },
+    {
+      "id": 4,
+      "topic": "Anatomy",
+      "case": "Inability to flex DIP of little finger after deep cut to medial forearm.",
+      "options": ["Ulnar nerve", "Median nerve", "Radial nerve", "Axillary nerve"],
+      "answer": "Ulnar nerve"
+    },
+    {
+      "id": 5,
+      "topic": "Anatomy",
+      "case": "Elderly man with urinary incontinence, gait disturbance, and dementia.",
+      "options": ["Alzheimer’s disease", "Parkinson’s disease", "Normal pressure hydrocephalus", "Stroke"],
+      "answer": "Normal pressure hydrocephalus"
+    },
+    {
+      "id": 6,
+      "topic": "Physiology",
+      "case": "Patient with high BP has decreased renin, increased aldosterone, hypokalemia.",
+      "options": ["Primary hyperaldosteronism", "Secondary hyperaldosteronism", "Renal artery stenosis", "Addison’s disease"],
+      "answer": "Primary hyperaldosteronism"
+    },
+    {
+      "id": 7,
+      "topic": "Physiology",
+      "case": "Young woman fainting when standing up suddenly. HR increases, BP drops.",
+      "options": ["Orthostatic hypotension", "Vasovagal syncope", "Anemia", "Diabetes"],
+      "answer": "Orthostatic hypotension"
+    },
+    {
+      "id": 8,
+      "topic": "Physiology",
+      "case": "Increased 2,3-BPG causes oxygen dissociation curve to shift:",
+      "options": ["To the left", "To the right", "No change", "Becomes linear"],
+      "answer": "To the right"
+    },
+    {
+      "id": 9,
+      "topic": "Physiology",
+      "case": "What happens during isovolumetric contraction?",
+      "options": ["All valves closed, pressure rises", "AV valves open, pressure drops", "Semilunar valves open, volume falls", "Blood enters atria"],
+      "answer": "All valves closed, pressure rises"
+    },
+    {
+      "id": 10,
+      "topic": "Physiology",
+      "case": "Patient has ↑PTH, ↓Ca2+, ↑phosphate. Likely cause?",
+      "options": ["Secondary hyperparathyroidism", "Primary hyperparathyroidism", "Tertiary hyperparathyroidism", "Hypoparathyroidism"],
+      "answer": "Secondary hyperparathyroidism"
+    },
+    {
+      "id": 11,
+      "topic": "Pathology",
+      "case": "Middle-aged man, hepatosplenomegaly, pancytopenia, dry tap on BM biopsy.",
+      "options": ["CML", "AML", "Hairy cell leukemia", "Aplastic anemia"],
+      "answer": "Hairy cell leukemia"
+    },
+    {
+      "id": 12,
+      "topic": "Pathology",
+      "case": "Young woman, malar rash, joint pain, photosensitivity.",
+      "options": ["SLE", "Dermatomyositis", "Psoriasis", "RA"],
+      "answer": "SLE"
+    },
+    {
+      "id": 13,
+      "topic": "Pathology",
+      "case": "Child with abdominal mass, crossing midline, high catecholamines in urine.",
+      "options": ["Wilms tumor", "Neuroblastoma", "Hepatoblastoma", "Rhabdomyosarcoma"],
+      "answer": "Neuroblastoma"
+    },
+    {
+      "id": 14,
+      "topic": "Pathology",
+      "case": "Fatty change in liver due to chronic alcohol use is what type of injury?",
+      "options": ["Apoptosis", "Coagulative necrosis", "Reversible injury", "Irreversible injury"],
+      "answer": "Reversible injury"
+    },
+    {
+      "id": 15,
+      "topic": "Pathology",
+      "case": "Oncogene associated with CML?",
+      "options": ["BCR-ABL", "MYC", "TP53", "BRCA1"],
+      "answer": "BCR-ABL"
+    },
+    {
+      "id": 16,
+      "topic": "Pharmacology",
+      "case": "Man on TB treatment develops red-orange urine.",
+      "options": ["Isoniazid", "Rifampicin", "Pyrazinamide", "Ethambutol"],
+      "answer": "Rifampicin"
+    },
+    {
+      "id": 17,
+      "topic": "Pharmacology",
+      "case": "ACE inhibitor side effect: persistent dry cough. Why?",
+      "options": ["Bradykinin buildup", "Angiotensin deficiency", "Volume depletion", "Hyponatremia"],
+      "answer": "Bradykinin buildup"
+    },
+    {
+      "id": 18,
+      "topic": "Pharmacology",
+      "case": "Parkinson's patient on Levodopa has psychosis. Best management?",
+      "options": ["Stop levodopa", "Add haloperidol", "Add quetiapine", "Add benzodiazepine"],
+      "answer": "Add quetiapine"
+    },
+    {
+      "id": 19,
+      "topic": "Pharmacology",
+      "case": "Antibiotic causing tendon rupture?",
+      "options": ["Amoxicillin", "Ciprofloxacin", "Erythromycin", "Doxycycline"],
+      "answer": "Ciprofloxacin"
+    },
+    {
+      "id": 20,
+      "topic": "Pharmacology",
+      "case": "Antidote for benzodiazepine overdose?",
+      "options": ["Atropine", "Naloxone", "Flumazenil", "Physostigmine"],
+      "answer": "Flumazenil"
+    },
+    {
+      "id": 21,
+      "topic": "Microbiology",
+      "case": "Diarrhea after antibiotic use. Organism?",
+      "options": ["E. coli", "C. difficile", "Shigella", "Salmonella"],
+      "answer": "C. difficile"
+    },
+    {
+      "id": 22,
+      "topic": "Microbiology",
+      "case": "Hiker with rash on palms and soles, fever, from tick bite in NC, USA.",
+      "options": ["Lyme disease", "Rocky Mountain Spotted Fever", "Syphilis", "Typhoid"],
+      "answer": "Rocky Mountain Spotted Fever"
+    },
+    {
+      "id": 23,
+      "topic": "Microbiology",
+      "case": "Neonatal meningitis: gram-negative rod, lactose fermenter.",
+      "options": ["Listeria", "Klebsiella", "E. coli", "Neisseria"],
+      "answer": "E. coli"
+    },
+    {
+      "id": 24,
+      "topic": "Microbiology",
+      "case": "Bacteria with 'school of fish' appearance on microscopy:",
+      "options": ["Haemophilus ducreyi", "Chlamydia trachomatis", "Neisseria gonorrhoeae", "Treponema pallidum"],
+      "answer": "Haemophilus ducreyi"
+    },
+    {
+      "id": 25,
+      "topic": "Microbiology",
+      "case": "Diabetic patient with black nasal eschar after sinus infection:",
+      "options": ["Aspergillus", "Rhizopus (Mucormycosis)", "Candida", "Cryptococcus"],
+      "answer": "Rhizopus (Mucormycosis)"
+    },
+    {
+      "id": 26,
+      "topic": "Medicine",
+      "case": "Young man with chest pain relieved by sitting forward, diffuse ST elevation on ECG.",
+      "options": ["Myocardial infarction", "Pericarditis", "PE", "GERD"],
+      "answer": "Pericarditis"
+    },
+    {
+      "id": 27,
+      "topic": "Medicine",
+      "case": "Middle-aged smoker, chronic productive cough for 3 months over 2 consecutive years.",
+      "options": ["Asthma", "Chronic bronchitis", "Emphysema", "Bronchiectasis"],
+      "answer": "Chronic bronchitis"
+    },
+    {
+      "id": 28,
+      "topic": "Medicine",
+      "case": "Elderly female with fatigue, pallor, glossitis, and high MCV.",
+      "options": ["Iron deficiency anemia", "Vitamin B12 deficiency", "Thalassemia", "Anemia of chronic disease"],
+      "answer": "Vitamin B12 deficiency"
+    },
+    {
+      "id": 29,
+      "topic": "Medicine",
+      "case": "Young female with heat intolerance, weight loss, and proptosis.",
+      "options": ["Cushing's syndrome", "Graves' disease", "PCOS", "Hashimoto's"],
+      "answer": "Graves' disease"
+    },
+    {
+      "id": 30,
+      "topic": "Medicine",
+      "case": "Diabetic patient with decreased sensation in feet, recurrent foot ulcers.",
+      "options": ["PAD", "Neuropathy", "Charcot foot", "Osteomyelitis"],
+      "answer": "Neuropathy"
+    },
+    {
+      "id": 31,
+      "topic": "Surgery",
+      "case": "Patient with severe abdominal pain out of proportion to exam.",
+      "options": ["Appendicitis", "Pancreatitis", "Mesenteric ischemia", "Perforated ulcer"],
+      "answer": "Mesenteric ischemia"
+    },
+    {
+      "id": 32,
+      "topic": "Surgery",
+      "case": "Elderly man with progressive dysphagia for solids then liquids.",
+      "options": ["GERD", "Achalasia", "Esophageal cancer", "Stricture"],
+      "answer": "Esophageal cancer"
+    },
+    {
+      "id": 33,
+      "topic": "Surgery",
+      "case": "Young male with RUQ pain after fatty meal, fever, and Murphy's sign.",
+      "options": ["Appendicitis", "Cholecystitis", "Pancreatitis", "Hepatitis"],
+      "answer": "Cholecystitis"
+    },
+    {
+      "id": 34,
+      "topic": "Surgery",
+      "case": "Man with scrotal swelling that transilluminates.",
+      "options": ["Hydrocele", "Varicocele", "Hernia", "Testicular torsion"],
+      "answer": "Hydrocele"
+    },
+    {
+      "id": 35,
+      "topic": "Surgery",
+      "case": "Sudden onset severe testicular pain with absent cremasteric reflex.",
+      "options": ["Epididymitis", "Torsion", "Orchitis", "Varicocele"],
+      "answer": "Torsion"
+    },
+    {
+      "id": 36,
+      "topic": "Obstetrics & Gynecology",
+      "case": "Pregnant woman with painless vaginal bleeding at 32 weeks.",
+      "options": ["Placenta previa", "Abruptio placenta", "Preterm labor", "Vasa previa"],
+      "answer": "Placenta previa"
+    },
+    {
+      "id": 37,
+      "topic": "Obstetrics & Gynecology",
+      "case": "Postmenopausal woman with vaginal bleeding.",
+      "options": ["Fibroid", "Endometrial cancer", "Cervical erosion", "Polyps"],
+      "answer": "Endometrial cancer"
+    },
+    {
+      "id": 38,
+      "topic": "Obstetrics & Gynecology",
+      "case": "Pregnant woman with hypertension, proteinuria, and edema.",
+      "options": ["Eclampsia", "Pre-eclampsia", "HELLP", "Chronic hypertension"],
+      "answer": "Pre-eclampsia"
+    },
+    {
+      "id": 39,
+      "topic": "Obstetrics & Gynecology",
+      "case": "Adolescent girl with primary amenorrhea, normal secondary sex characteristics, absent uterus.",
+      "options": ["Turner syndrome", "MRKH syndrome", "Androgen insensitivity", "Hypogonadism"],
+      "answer": "MRKH syndrome"
+    },
+    {
+      "id": 40,
+      "topic": "Obstetrics & Gynecology",
+      "case": "Pregnant woman with seizures and high BP.",
+      "options": ["Seizure disorder", "Pre-eclampsia", "Eclampsia", "HELLP"],
+      "answer": "Eclampsia"
+    },
+    {
+      "id": 41,
+      "topic": "Pediatrics",
+      "case": "Child with barking cough, stridor, steeple sign on X-ray.",
+      "options": ["Epiglottitis", "Croup", "Asthma", "Bronchiolitis"],
+      "answer": "Croup"
+    },
+    {
+      "id": 42,
+      "topic": "Pediatrics",
+      "case": "6-month-old with seizures, hypoglycemia, hepatomegaly.",
+      "options": ["Von Gierke disease", "Tay-Sachs", "Hurler syndrome", "Galactosemia"],
+      "answer": "Von Gierke disease"
+    },
+    {
+      "id": 43,
+      "topic": "Pediatrics",
+      "case": "Child with fever, rash that starts on face and spreads, Koplik spots.",
+      "options": ["Rubella", "Measles", "Roseola", "Fifth disease"],
+      "answer": "Measles"
+    },
+    {
+      "id": 44,
+      "topic": "Pediatrics",
+      "case": "Newborn with continuous machinery murmur.",
+      "options": ["ASD", "VSD", "PDA", "Tetralogy of Fallot"],
+      "answer": "PDA"
+    },
+    {
+      "id": 45,
+      "topic": "Pediatrics",
+      "case": "10-year-old with limp, hip pain, and avascular necrosis of femoral head.",
+      "options": ["SCFE", "Osteomyelitis", "Legg-Calvé-Perthes disease", "Septic arthritis"],
+      "answer": "Legg-Calvé-Perthes disease"
+    }
+  ]
+    

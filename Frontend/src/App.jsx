@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import Games from './pages/Games'
 import { ArrowRight, Gamepad2, Brain, Trophy, Heart, Zap, Star } from 'lucide-react'
 import { Particles } from './components/particles'
+import Quiz from './components/Quiz'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/games" element={<Games />} />
+        <Route path="/quiz" element={<Quiz />} />
       </Routes>
     </Router>
   )

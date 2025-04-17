@@ -32,7 +32,7 @@ function Login() {
               </svg>
             </div>
             <span className="text-2xl font-russo text-green-300 tracking-wider">
-              HEALTH<span className="text-white">BT</span>
+              HEALTH<span className="text-white">QUEST</span>
             </span>
           </Link>
         </div>
