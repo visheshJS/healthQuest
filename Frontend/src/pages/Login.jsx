@@ -1,17 +1,52 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Layout } from '../components/Layout'
 import { Particles } from '../components/particles'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // In a real app, we would validate and authenticate here
-    navigate('/dashboard')
+    
+    // Basic validation
+    if (!email || !password) {
+      toast.error("Please fill in all fields")
+      return
+    }
+    
+    try {
+      setIsLoading(true)
+      
+      const response = await axios.post('http://localhost:3000/api/users/login', {
+        email,
+        password
+      }, {
+        withCredentials: true
+      })
+      
+      if (response.data.success) {
+        // Save token to localStorage
+        localStorage.setItem('token', response.data.token)
+        
+        // Save user data to localStorage
+        localStorage.setItem('user', JSON.stringify(response.data.user))
+        
+        toast.success("Login successful!")
+        navigate('/dashboard')
+      }
+    } catch (error) {
+      console.error("Login error:", error)
+      toast.error(error.response?.data?.message || "Login failed. Please check your credentials.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -37,23 +72,28 @@ function Login() {
           </Link>
         </div>
         
-        <div className="max-w-md mx-auto mt-16 p-8 bg-black/30 backdrop-blur-xl border border-green-500/20 rounded-xl">
+        <div className="max-w-md mx-auto mt-12 p-8 bg-black/30 backdrop-blur-xl border border-green-500/20 rounded-xl">
           <h2 className="text-3xl font-russo text-center mb-8 text-green-300">LOGIN</h2>
           
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
               <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 id="email"
                 type="email"
                 className="w-full px-4 py-3 bg-black/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
-                placeholder="Enter your email"
+                placeholder="john.doe@example.com"
                 required
               />
             </div>
             
             <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">Password</label>
+              <div className="flex justify-between items-center mb-2">
+                <label htmlFor="password" className="block text-sm font-medium">Password</label>
+                <Link to="/forgot-password" className="text-sm text-green-300 hover:text-green-200">Forgot Password?</Link>
+              </div>
               <div className="relative">
                 <input
                   id="password"
@@ -61,6 +101,8 @@ function Login() {
                   className="w-full px-4 py-3 bg-black/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
                   placeholder="Enter your password"
                   required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
@@ -72,32 +114,17 @@ function Login() {
               </div>
             </div>
             
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-green-500/30 bg-black/50 text-green-500 focus:ring-green-500/50"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm">
-                  Remember me
-                </label>
-              </div>
-              <a href="#" className="text-sm text-green-300 hover:text-green-200">
-                Forgot password?
-              </a>
-            </div>
-            
             <button
               type="submit"
-              className="w-full game-button py-3 px-4 flex justify-center"
+              disabled={isLoading}
+              className="w-full game-button py-3 px-4 flex justify-center mt-6"
             >
-              LOGIN
+              {isLoading ? 'LOGGING IN...' : 'LOGIN'}
             </button>
           </form>
           
           <div className="mt-6 text-center">
-            <p>Don't have an account? <Link to="/signup" className="text-green-300 hover:text-green-200">Sign up</Link></p>
+            <p>Don't have an account? <Link to="/signup" className="text-green-300 hover:text-green-200">Create Account</Link></p>
           </div>
         </div>
       </div>

@@ -2,16 +2,69 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Particles } from '../components/particles'
 import { EyeIcon, EyeOffIcon, CheckCircle } from 'lucide-react'
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
   const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [profession, setProfession] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [agreeTerms, setAgreeTerms] = useState(false)
   const navigate = useNavigate()
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // In a real app, we would validate and register the user here
-    navigate('/dashboard')
+    
+    // Basic validation
+    if (!firstName || !lastName || !email || !password || !profession) {
+      toast.error("Please fill in all fields")
+      return
+    }
+    
+    if (!agreeTerms) {
+      toast.error("Please agree to the Terms of Service and Privacy Policy")
+      return
+    }
+    
+    // Password strength check
+    if (passwordStrength(password) < 3) {
+      toast.error("Please create a stronger password")
+      return
+    }
+    
+    try {
+      setIsLoading(true)
+      
+      const response = await axios.post('http://localhost:3000/api/users/register', {
+        firstName,
+        lastName,
+        email,
+        password,
+        profession
+      }, {
+        withCredentials: true
+      })
+      
+      if (response.data.success) {
+        // Save token to localStorage
+        localStorage.setItem('token', response.data.token)
+        
+        // Save user data to localStorage
+        localStorage.setItem('user', JSON.stringify(response.data.user))
+        
+        toast.success("Registration successful!")
+        navigate('/dashboard')
+      }
+    } catch (error) {
+      console.error("Registration error:", error)
+      toast.error(error.response?.data?.message || "Registration failed. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const passwordStrength = (pass) => {
@@ -63,6 +116,8 @@ function SignUp() {
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium mb-2">First Name</label>
                 <input
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                   id="firstName"
                   type="text"
                   className="w-full px-4 py-3 bg-black/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
@@ -73,6 +128,8 @@ function SignUp() {
               <div>
                 <label htmlFor="lastName" className="block text-sm font-medium mb-2">Last Name</label>
                 <input
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                   id="lastName"
                   type="text"
                   className="w-full px-4 py-3 bg-black/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
@@ -85,6 +142,8 @@ function SignUp() {
             <div>
               <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
               <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 id="email"
                 type="email"
                 className="w-full px-4 py-3 bg-black/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
@@ -97,10 +156,12 @@ function SignUp() {
               <label htmlFor="profession" className="block text-sm font-medium mb-2">Profession</label>
               <select
                 id="profession"
+                value={profession}
+                onChange={(e) => setProfession(e.target.value)}
                 className="w-full px-4 py-3 bg-black/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
                 required
               >
-                <option value="" disabled selected>Select your profession</option>
+                <option value="" disabled>Select your profession</option>
                 <option value="doctor">Doctor</option>
                 <option value="nurse">Nurse</option>
                 <option value="student">Medical Student</option>
@@ -158,6 +219,8 @@ function SignUp() {
               <input
                 id="terms"
                 type="checkbox"
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
                 className="h-4 w-4 rounded border-green-500/30 bg-black/50 text-green-500 focus:ring-green-500/50"
                 required
               />
@@ -168,9 +231,10 @@ function SignUp() {
             
             <button
               type="submit"
+              disabled={isLoading}
               className="w-full game-button py-3 px-4 flex justify-center mt-6"
             >
-              CREATE ACCOUNT
+              {isLoading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT'}
             </button>
           </form>
           
