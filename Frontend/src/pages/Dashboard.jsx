@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Award, BarChart3, Gamepad, Brain, Trophy, User, Heart, Zap, Star, BookOpen, Menu, X } from 'lucide-react';
+import { ArrowRight, Award, BarChart3, Gamepad, Brain, Trophy, User, Heart, Zap, Star, BookOpen, Menu, X, Home } from 'lucide-react';
 import { getCurrentUser } from '../utils/auth';
 import LogoutButton from '../components/LogoutButton';
 import { Particles } from '../components/particles';
@@ -101,6 +101,11 @@ function Dashboard() {
           </Link>
           
           <div className="flex items-center gap-3">
+            <Link to="/" className="game-button-small py-1.5 px-3 flex items-center">
+              <Home className="w-4 h-4 mr-1.5" />
+              <span className="hidden sm:inline">HOME</span>
+            </Link>
+            
             {user && (
               <>
                 {/* Mobile menu button */}
@@ -278,8 +283,31 @@ function Dashboard() {
               PLAY NOW
             </button>
           </div>
+          
+          <div className="game-card p-4 sm:p-6 cursor-pointer transform hover:scale-105 transition-all duration-300 order-last md:order-none col-span-1 sm:col-span-2 md:col-span-1 mx-auto md:mx-0 w-full sm:w-1/2 md:w-full" onClick={() => handlePlayGame('trivia')}>
+            <div className="flex gap-3 sm:gap-4 items-start">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-r from-purple-400 to-indigo-500 flex items-center justify-center">
+                <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg sm:text-2xl font-russo mb-1 sm:mb-2 text-green-300">Competitive</h3>
+                <p className="text-xs sm:text-sm text-green-100/70 mb-2 sm:mb-3">Climb the leaderboards and compete with peers worldwide</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={`competitive-star-${i}`} className="w-3 h-3 sm:w-4 sm:h-4 text-green-400/80 mr-1" fill={i < 4 ? "currentColor" : "none"} />
+                    ))}
+                  </div>
+                  <span className="text-xs bg-green-500/20 text-green-300 px-2 py-0.5 rounded">Hard</span>
+                </div>
+              </div>
+            </div>
+            <button className="mt-3 sm:mt-4 w-full game-button-small py-1.5 sm:py-2 text-sm">
+              PLAY NOW
+            </button>
+          </div>
 
-          <div className="game-card p-4 sm:p-6 cursor-pointer transform hover:scale-105 transition-all duration-300 sm:col-span-2 md:col-span-1" onClick={() => handlePlayGame('trivia')}>
+          <div className="game-card p-4 sm:p-6 cursor-pointer transform hover:scale-105 transition-all duration-300" onClick={() => handlePlayGame('trivia')}>
             <div className="flex gap-3 sm:gap-4 items-start">
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-r from-teal-400 to-teal-500 flex items-center justify-center">
                 <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-white" />

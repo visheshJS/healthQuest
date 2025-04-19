@@ -98,7 +98,7 @@ function Home() {
               </Link>
               <Link to="/dashboard" className="w-full sm:w-auto">
                 <button className="w-full sm:w-auto text-white border-green-400/50 hover:bg-green-500/20 text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 animate-float-slow border rounded-md">
-                  LEARN MORE
+                  DASHBOARD
                 </button>
               </Link>
             </div>
