@@ -7,25 +7,42 @@ import {
   Heart,
   Zap,
   Star,
+  Menu,
+  X,
 } from "lucide-react";
 import { Particles } from "../components/particles";
+import { useState } from "react";
 
 function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-900 via-green-800 to-emerald-900 text-white relative overflow-hidden">
       <Particles className="absolute inset-0 z-0" quantity={50} />
 
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        <header className="flex justify-between items-center py-6">
+      <div className="container mx-auto px-4 py-4 sm:py-8 relative z-10">
+        <header className="flex justify-between items-center py-4 sm:py-6">
           <div className="flex items-center gap-2">
-            <div className="w-12 h-12 rounded-lg bg-green-500/30 border border-green-400/50 flex items-center justify-center animate-pulse-glow">
-              <Gamepad className="w-6 h-6 text-green-300" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-green-500/30 border border-green-400/50 flex items-center justify-center animate-pulse-glow">
+              <Gamepad className="w-5 h-5 sm:w-6 sm:h-6 text-green-300" />
             </div>
-            <h1 className="text-3xl font-russo text-green-300 tracking-wider">
+            <h1 className="text-xl sm:text-3xl font-russo text-green-300 tracking-wider">
               HEALTH<span className="text-white">QUEST</span>
             </h1>
           </div>
-          <div className="flex gap-4">
+          
+          {/* Mobile menu button */}
+          <div className="sm:hidden">
+            <button 
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 rounded-md bg-green-500/20 text-green-300"
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+          
+          {/* Desktop navigation */}
+          <div className="hidden sm:flex gap-4">
             <Link to="/login">
               <button className="text-white hover:text-white hover:bg-white/20 border border-green-400/30 px-4 py-2 rounded-md font-medium">
                 LOGIN
@@ -36,42 +53,58 @@ function Home() {
             </Link>
           </div>
         </header>
+        
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="sm:hidden bg-black/60 backdrop-blur-md rounded-lg mt-2 p-4 border border-green-500/30 animate-fadeIn">
+            <div className="flex flex-col gap-3">
+              <Link to="/login" className="w-full">
+                <button className="w-full text-white hover:text-white hover:bg-white/20 border border-green-400/30 px-4 py-3 rounded-md font-medium">
+                  LOGIN
+                </button>
+              </Link>
+              <Link to="/signup" className="w-full">
+                <button className="w-full game-button py-3">SIGN UP</button>
+              </Link>
+            </div>
+          </div>
+        )}
 
-        <main className="py-20">
+        <main className="py-10 sm:py-20">
           <div className="max-w-3xl mx-auto text-center">
             <div className="mb-4 flex justify-center">
-              <div className="px-4 py-2 bg-green-500/20 border border-green-400/30 rounded-full text-green-300 text-sm font-medium animate-pulse">
+              <div className="px-3 sm:px-4 py-1 sm:py-2 bg-green-500/20 border border-green-400/30 rounded-full text-green-300 text-xs sm:text-sm font-medium animate-pulse">
                 LEVEL UP YOUR MEDICAL KNOWLEDGE
               </div>
             </div>
-            <h2 className="text-6xl font-russo mb-6 animate-fadeIn leading-tight">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-russo mb-4 sm:mb-6 animate-fadeIn leading-tight">
               MASTER{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-300">
                 HEALTHCARE
               </span>{" "}
               THROUGH GAMING
             </h2>
-            <p className="text-xl mb-10 text-white/80">
+            <p className="text-base sm:text-xl mb-6 sm:mb-10 text-white/80 px-2">
               A fun, interactive platform that transforms healthcare education
               into an engaging gaming experience for medical students, nurses,
               and healthcare professionals.
             </p>
-            <div className="flex justify-center gap-6">
-              <Link to="/signup">
-                <button className="game-button text-lg px-8 py-6 animate-float">
+            <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+              <Link to="/signup" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto game-button text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 animate-float">
                   START YOUR JOURNEY{" "}
-                  <ArrowRight className="ml-2 h-5 w-5 inline" />
+                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 inline" />
                 </button>
               </Link>
-              <Link to="/dashboard">
-                <button className="text-white border-green-400/50 hover:bg-green-500/20 text-lg px-8 py-6 animate-float-slow border rounded-md">
+              <Link to="/dashboard" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto text-white border-green-400/50 hover:bg-green-500/20 text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 animate-float-slow border rounded-md">
                   LEARN MORE
                 </button>
               </Link>
             </div>
           </div>
 
-          <div className="mt-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="mt-16 sm:mt-32 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8">
             {[
               {
                 title: "Quiz Battles",
@@ -108,20 +141,20 @@ function Home() {
             ].map((mode, index) => (
               <div
                 key={index}
-                className="game-card p-6 animate-float"
+                className="game-card p-5 sm:p-6 animate-float"
                 style={{ animationDelay: `${mode.delay}s` }}
               >
                 <div
-                  className={`w-16 h-16 rounded-xl bg-gradient-to-r ${mode.color} mb-6 flex items-center justify-center shadow-lg shadow-green-500/20`}
+                  className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-r ${mode.color} mb-4 sm:mb-6 flex items-center justify-center shadow-lg shadow-green-500/20`}
                 >
                   {mode.icon}
                 </div>
-                <h3 className="text-2xl font-russo mb-3 text-green-300">
+                <h3 className="text-xl sm:text-2xl font-russo mb-2 sm:mb-3 text-green-300">
                   {mode.title}
                 </h3>
-                <p className="text-white/70">{mode.description}</p>
+                <p className="text-sm sm:text-base text-white/70">{mode.description}</p>
 
-                <div className="mt-6 flex">
+                <div className="mt-4 sm:mt-6 flex">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
@@ -134,14 +167,14 @@ function Home() {
             ))}
           </div>
 
-          <div className="mt-32 text-center">
-            <div className="inline-block px-6 py-3 bg-green-500/20 border border-green-400/30 rounded-full text-green-300 text-sm font-medium mb-6">
+          <div className="mt-16 sm:mt-32 text-center">
+            <div className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-green-500/20 border border-green-400/30 rounded-full text-green-300 text-xs sm:text-sm font-medium mb-4 sm:mb-6">
               JOIN THOUSANDS OF HEALTHCARE PROFESSIONALS
             </div>
-            <h3 className="text-4xl font-russo mb-10">READY TO PLAY?</h3>
+            <h3 className="text-2xl sm:text-4xl font-russo mb-6 sm:mb-10">READY TO PLAY?</h3>
             <div className="flex justify-center">
               <Link to="/signup">
-                <button className="game-button text-xl px-10 py-8 animate-pulse-glow">
+                <button className="game-button text-lg sm:text-xl px-8 sm:px-10 py-6 sm:py-8 animate-pulse-glow">
                   BEGIN YOUR ADVENTURE
                 </button>
               </Link>
@@ -149,7 +182,7 @@ function Home() {
           </div>
         </main>
 
-        <footer className="mt-32 py-8 border-t border-green-500/20 text-center text-white/60">
+        <footer className="mt-16 sm:mt-32 py-6 sm:py-8 border-t border-green-500/20 text-center text-white/60 text-sm sm:text-base">
           <p>
             © 2025 HealthQuest. All rights reserved. Made with ❤️ for healthcare
             education.

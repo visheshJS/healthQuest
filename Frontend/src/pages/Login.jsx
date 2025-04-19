@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Particles } from '../components/particles'
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { EyeIcon, EyeOffIcon, Home } from 'lucide-react'
 import { loginUser } from '../utils/auth'
 import { toast } from 'react-hot-toast'
 
@@ -47,8 +47,8 @@ function Login() {
     <div className="min-h-screen bg-gradient-to-b from-green-900 via-green-800 to-emerald-900 text-white relative overflow-hidden">
       <Particles className="absolute inset-0 z-0" quantity={30} />
       
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        <div className="flex justify-between items-center py-6">
+      <div className="container mx-auto px-4 py-4 sm:py-8 relative z-10">
+        <div className="flex flex-col sm:flex-row justify-between items-center py-4 sm:py-6 gap-4 sm:gap-0">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-lg bg-green-500/30 border border-green-400/50 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -60,24 +60,21 @@ function Login() {
                 <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
               </svg>
             </div>
-            <span className="text-2xl font-russo text-green-300 tracking-wider">
+            <span className="text-xl sm:text-2xl font-russo text-green-300 tracking-wider">
               HEALTH<span className="text-white">QUEST</span>
             </span>
           </Link>
           
           <Link to="/" className="game-button-small py-2 px-4 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-              <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
+            <Home className="w-4 h-4 mr-2" />
             HOME
           </Link>
         </div>
         
-        <div className="max-w-md mx-auto mt-12 p-8 bg-black/30 backdrop-blur-xl border border-green-500/20 rounded-xl">
-          <h2 className="text-3xl font-russo text-center mb-8 text-green-300">LOGIN</h2>
+        <div className="max-w-md mx-auto mt-6 sm:mt-12 p-6 sm:p-8 bg-black/30 backdrop-blur-xl border border-green-500/20 rounded-xl">
+          <h2 className="text-2xl sm:text-3xl font-russo text-center mb-6 sm:mb-8 text-green-300">LOGIN</h2>
           
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
             <div>
               <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
               <input
@@ -123,7 +120,7 @@ function Login() {
           </form>
           
           <div className="mt-6 text-center">
-            <p>Don't have an account? <Link to="/signup" className="text-green-300 hover:text-green-200">Create Account</Link></p>
+            <p className="text-sm sm:text-base">Don't have an account? <Link to="/signup" className="text-green-300 hover:text-green-200">Create Account</Link></p>
           </div>
         </div>
       </div>
