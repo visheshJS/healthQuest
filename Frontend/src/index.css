@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Russo font */
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -50,6 +53,11 @@
 
   body {
     @apply antialiased;
+    @apply bg-gray-950 text-gray-100;
+  }
+
+  .font-russo {
+    font-family: 'Russo One', sans-serif;
   }
 }
 
@@ -77,26 +85,20 @@
 
 /* Animations */
 @keyframes float {
-  0% {
-    transform: translateY(0px);
+  0%, 100% {
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0px);
+    transform: translateY(-5px);
   }
 }
 
-@keyframes pulse-glow {
-  0% {
-    box-shadow: 0 0 5px 0 rgba(80, 250, 123, 0.3);
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0);
   }
   50% {
-    box-shadow: 0 0 20px 5px rgba(80, 250, 123, 0.6);
-  }
-  100% {
-    box-shadow: 0 0 5px 0 rgba(80, 250, 123, 0.3);
+    transform: translateY(-10px);
   }
 }
 
@@ -111,32 +113,21 @@
   }
 }
 
-@keyframes slideInFromBottom {
-  from {
-    transform: translateY(50px);
-    opacity: 0;
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px 0 rgba(74, 222, 128, 0.4);
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+  50% {
+    box-shadow: 0 0 20px 5px rgba(74, 222, 128, 0.6);
   }
 }
 
 .animate-float {
-  animation: float 6s ease-in-out infinite;
+  animation: float 3s ease-in-out infinite;
 }
 
 .animate-float-slow {
-  animation: float 8s ease-in-out infinite;
+  animation: floatSlow 6s ease-in-out infinite;
 }
 
 .animate-float-fast {
@@ -144,11 +135,11 @@
 }
 
 .animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
+  animation: pulseGlow 2s ease-in-out infinite;
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn 1s ease-out forwards;
 }
 
 .animate-slideIn {
@@ -161,23 +152,21 @@
 
 /* Game UI Elements */
 .game-card {
-  @apply bg-black/30 backdrop-blur-xl border-primary/20 rounded-xl overflow-hidden transition-all duration-300;
+  @apply bg-green-900/20 backdrop-blur-sm border border-green-500/20 rounded-xl p-5 shadow-lg shadow-green-900/20 hover:border-green-500/30 transition-all duration-300;
 }
 
 .game-card:hover {
-  @apply border-primary/40;
+  @apply border-green-500/30;
   transform: translateY(-5px);
 }
 
 @layer components {
   .game-button {
-    @apply bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 
-    text-white font-medium py-3 px-6 rounded-lg transition-all duration-300;
-    box-shadow: 0 0 15px rgba(80, 250, 123, 0.5);
+    @apply bg-gradient-to-b from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-bold py-2 px-4 rounded-md shadow-lg shadow-green-700/50 border border-emerald-400 transition-all duration-300 flex justify-center items-center gap-2;
   }
 
-  .game-button:hover {
-    box-shadow: 0 0 25px rgba(80, 250, 123, 0.8);
+  .game-button-small {
+    @apply bg-gradient-to-b from-emerald-500/80 to-green-600/80 hover:from-emerald-400 hover:to-green-500 text-white font-bold py-1 px-3 rounded-md shadow-md shadow-green-700/30 border border-emerald-400/50 transition-all duration-300 flex justify-center items-center gap-1;
   }
 
   .quiz-option {

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Particles } from '../components/particles'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
-import axios from 'axios'
+import { loginUser } from '../utils/auth'
 import { toast } from 'react-hot-toast'
 
 function Login() {
@@ -24,26 +24,20 @@ function Login() {
     try {
       setIsLoading(true)
       
-      const response = await axios.post('http://localhost:3000/api/users/login', {
+      const result = await loginUser({
         email,
         password
-      }, {
-        withCredentials: true
       })
       
-      if (response.data.success) {
-        // Save token to localStorage
-        localStorage.setItem('token', response.data.token)
-        
-        // Save user data to localStorage
-        localStorage.setItem('user', JSON.stringify(response.data.user))
-        
+      if (result.success) {
         toast.success("Login successful!")
         navigate('/dashboard')
+      } else {
+        toast.error(result.message)
       }
     } catch (error) {
       console.error("Login error:", error)
-      toast.error(error.response?.data?.message || "Login failed. Please check your credentials.")
+      toast.error("Login failed. Please check your credentials.")
     } finally {
       setIsLoading(false)
     }
@@ -90,10 +84,7 @@ function Login() {
             </div>
             
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <label htmlFor="password" className="block text-sm font-medium">Password</label>
-                <Link to="/forgot-password" className="text-sm text-green-300 hover:text-green-200">Forgot Password?</Link>
-              </div>
+              <label htmlFor="password" className="block text-sm font-medium mb-2">Password</label>
               <div className="relative">
                 <input
                   id="password"

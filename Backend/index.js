@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
+import mongoose from "mongoose";
 
 dotenv.config(
     {
@@ -9,8 +11,32 @@ dotenv.config(
     }
 );
 import connectDB from "./db/connectDB.js";
+import userRoutes from "./routes/userRoutes.js";
+import gameRoutes from "./routes/gameRoutes.js";
+
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
+
+// Middleware
+app.use(cors({
+    origin: [process.env.CORS_ORIGIN, 'http://localhost:5174', 'http://localhost:5173'],
+    credentials: true,
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+}));
+app.use(express.json());    
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/games', gameRoutes);
+
+// Root route
+app.get('/', (req, res) => {
+    res.json({ message: "Game API is running" });
+});
+
 connectDB()
 .then(()=>{
     app.on("error",(error)=>{
@@ -26,12 +52,4 @@ connectDB()
 })
 .catch((err)=>{
     console.log("mongo db connection is failed bro !!",err);
-
-})
-
-app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-    credentials: true
-}));
-app.use(express.json());    
-app.use(cookieParser());
+});

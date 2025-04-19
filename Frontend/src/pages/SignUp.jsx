@@ -2,14 +2,13 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Particles } from '../components/particles'
 import { EyeIcon, EyeOffIcon, CheckCircle } from 'lucide-react'
-import axios from 'axios'
+import { registerUser } from '../utils/auth'
 import { toast } from 'react-hot-toast'
 
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
   const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [profession, setProfession] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -20,7 +19,7 @@ function SignUp() {
     e.preventDefault()
     
     // Basic validation
-    if (!firstName || !lastName || !email || !password || !profession) {
+    if (!username || !email || !password || !profession) {
       toast.error("Please fill in all fields")
       return
     }
@@ -39,29 +38,22 @@ function SignUp() {
     try {
       setIsLoading(true)
       
-      const response = await axios.post('http://localhost:3000/api/users/register', {
-        firstName,
-        lastName,
+      const result = await registerUser({
+        username,
         email,
         password,
         profession
-      }, {
-        withCredentials: true
       })
       
-      if (response.data.success) {
-        // Save token to localStorage
-        localStorage.setItem('token', response.data.token)
-        
-        // Save user data to localStorage
-        localStorage.setItem('user', JSON.stringify(response.data.user))
-        
+      if (result.success) {
         toast.success("Registration successful!")
         navigate('/dashboard')
+      } else {
+        toast.error(result.message)
       }
     } catch (error) {
       console.error("Registration error:", error)
-      toast.error(error.response?.data?.message || "Registration failed. Please try again.")
+      toast.error("Registration failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -112,31 +104,18 @@ function SignUp() {
           <h2 className="text-3xl font-russo text-center mb-8 text-green-300">CREATE ACCOUNT</h2>
           
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium mb-2">First Name</label>
-                <input
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  id="firstName"
-                  type="text"
-                  className="w-full px-4 py-3 bg-black/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
-                  placeholder="John"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium mb-2">Last Name</label>
-                <input
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  id="lastName"
-                  type="text"
-                  className="w-full px-4 py-3 bg-black/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
-                  placeholder="Doe"
-                  required
-                />
-              </div>
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium mb-2">Username</label>
+              <input
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                id="username"
+                type="text"
+                className="w-full px-4 py-3 bg-black/50 border border-green-500/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500/50"
+                placeholder="johndoe"
+                required
+                minLength={3}
+              />
             </div>
             
             <div>

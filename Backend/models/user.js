@@ -7,6 +7,10 @@ const progressSchema = new mongoose.Schema({
     gameId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Game',
+        required: false
+    },
+    gameType: {
+        type: String,
         required: true
     },
     bestScore: {
@@ -29,6 +33,10 @@ const progressSchema = new mongoose.Schema({
 
 // Define a schema for achievements
 const achievementSchema = new mongoose.Schema({
+    id: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -41,9 +49,12 @@ const achievementSchema = new mongoose.Schema({
         type: String,
         default: "trophy"
     },
+    achieved: {
+        type: Boolean,
+        default: false
+    },
     dateEarned: {
-        type: Date,
-        default: Date.now
+        type: Date
     },
     xpAwarded: {
         type: Number,
@@ -51,16 +62,37 @@ const achievementSchema = new mongoose.Schema({
     }
 }, { _id: false });
 
-const userSchema = new mongoose.Schema({
-    firstName: { 
-        type: String, 
-        required: [true, "First name is required"],
-        trim: true
+// Define schema for recent games
+const recentGameSchema = new mongoose.Schema({
+    id: {
+        type: String,
+        required: true
     },
-    lastName: { 
+    type: {
+        type: String,
+        required: true
+    },
+    score: {
+        type: Number,
+        required: true
+    },
+    xp: {
+        type: Number,
+        required: true
+    },
+    timestamp: {
+        type: Date,
+        default: Date.now
+    }
+}, { _id: false });
+
+const userSchema = new mongoose.Schema({
+    username: { 
         type: String, 
-        required: [true, "Last name is required"],
-        trim: true
+        required: [true, "Username is required"],
+        unique: true,
+        trim: true,
+        minlength: [3, "Username must be at least 3 characters"]
     },
     email: { 
         type: String, 
@@ -83,6 +115,10 @@ const userSchema = new mongoose.Schema({
         required: [true, "Profession is required"],
         enum: ["doctor", "nurse", "student", "other"]
     },
+    avatar: {
+        type: String,
+        default: "/avatars/default.png"
+    },
     level: {
         type: Number,
         default: 1
@@ -103,6 +139,9 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    lastPlayed: {
+        type: Date
+    },
     accuracy: {
         type: Number,
         default: 0
@@ -113,6 +152,7 @@ const userSchema = new mongoose.Schema({
     },
     progress: [progressSchema],
     achievements: [achievementSchema],
+    recentGames: [recentGameSchema],
     createdAt: {
         type: Date,
         default: Date.now
