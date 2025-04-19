@@ -12,4 +12,8 @@ export default defineConfig({
     },
   },
   assetsInclude: ['**/*.json'],
+  define: {
+    // Define environment variables that will be available in the client code
+    'process.env.VITE_API_URL': JSON.stringify('https://healthquest-n0i2.onrender.com/api'),
+  }
 }) 

@@ -1,7 +1,22 @@
 import axios from 'axios';
 
-// API base URL
-const API_URL = 'https://healthquest-n0i2.onrender.com/api';
+// API base URL - use environment variable if available, otherwise fallback to the hard-coded URL
+const API_URL = process.env.VITE_API_URL || 'https://healthquest-n0i2.onrender.com/api';
+
+console.log('USING API URL:', API_URL); // Log the API URL for debugging
+
+// Add request interceptor for debugging
+axios.interceptors.request.use(
+  (config) => {
+    console.log('REQUEST URL:', config.url);
+    console.log('REQUEST CONFIG:', config);
+    return config;
+  },
+  (error) => {
+    console.error('REQUEST ERROR:', error);
+    return Promise.reject(error);
+  }
+);
 
 // Create a custom axios instance for API calls
 const apiClient = axios.create({
@@ -12,6 +27,18 @@ const apiClient = axios.create({
     'Content-Type': 'application/json'
   }
 });
+
+// Add request interceptor for the apiClient
+apiClient.interceptors.request.use(
+  (config) => {
+    console.log('API CLIENT REQUEST:', config.url);
+    return config;
+  },
+  (error) => {
+    console.error('API CLIENT ERROR:', error);
+    return Promise.reject(error);
+  }
+);
 
 // Set auth token for all requests
 export const setAuthToken = (token) => {
