@@ -1,16 +1,26 @@
 import axios from 'axios';
 
 // API base URL
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://healthquest-n0i2.onrender.com/api';
 
-// Configure axios with credentials
-axios.defaults.withCredentials = true;
+// Create a custom axios instance for API calls
+const apiClient = axios.create({
+  baseURL: API_URL,
+  withCredentials: false, // Set to false since we're using token auth
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  }
+});
 
 // Set auth token for all requests
 export const setAuthToken = (token) => {
   if (token) {
+    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    // Also set it on the global axios for any non-apiClient requests
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   } else {
+    delete apiClient.defaults.headers.common['Authorization'];
     delete axios.defaults.headers.common['Authorization'];
   }
 };
@@ -18,7 +28,7 @@ export const setAuthToken = (token) => {
 // Login user
 export const loginUser = async (credentials) => {
   try {
-    const response = await axios.post(`${API_URL}/users/login`, credentials);
+    const response = await apiClient.post('/users/login', credentials);
     
     if (response.data.success) {
       // Save to localStorage
@@ -33,6 +43,7 @@ export const loginUser = async (credentials) => {
     
     return { success: false, message: 'Login failed' };
   } catch (error) {
+    console.error('Login error:', error);
     return { 
       success: false, 
       message: error.response?.data?.message || 'Login failed. Please try again.' 
@@ -43,7 +54,7 @@ export const loginUser = async (credentials) => {
 // Register user
 export const registerUser = async (userData) => {
   try {
-    const response = await axios.post(`${API_URL}/users/register`, userData);
+    const response = await apiClient.post('/users/register', userData);
     
     if (response.data.success) {
       // Save to localStorage
@@ -58,6 +69,7 @@ export const registerUser = async (userData) => {
     
     return { success: false, message: 'Registration failed' };
   } catch (error) {
+    console.error('Registration error:', error);
     return { 
       success: false, 
       message: error.response?.data?.message || 'Registration failed. Please try again.' 
@@ -69,7 +81,7 @@ export const registerUser = async (userData) => {
 export const logoutUser = async () => {
   try {
     // Call logout API
-    await axios.post(`${API_URL}/users/logout`);
+    await apiClient.post('/users/logout');
     
     // Remove from localStorage
     localStorage.removeItem('token');
@@ -196,7 +208,7 @@ export const updateUserProgress = async (quizData) => {
         console.error('No token found, cannot update user data on server');
       } else {
         // Send updated user data to the server
-        const response = await axios.put(`${API_URL}/users/update-progress`, {
+        const response = await apiClient.put('/users/update-progress', {
           xp: newXP,
           level: newLevel,
           completedQuizzes,
@@ -207,10 +219,6 @@ export const updateUserProgress = async (quizData) => {
             ...game,
             id: typeof game.id === 'string' ? game.id : `${game.id}-${Math.random().toString(36).substr(2, 9)}`
           }))
-        }, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
         });
         
         if (response.data.success) {
