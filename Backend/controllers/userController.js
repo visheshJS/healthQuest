@@ -4,7 +4,50 @@ import jwt from 'jsonwebtoken';
 // Register a new user
 export const registerUser = async (req, res) => {
     try {
+        console.log("Registration attempt:", req.body.email, req.body.username);
         const { username, email, password, profession } = req.body;
+        
+        // Validate input data
+        if (!username || !email || !password || !profession) {
+            console.log("Missing registration fields:", { 
+                username: !!username, 
+                email: !!email, 
+                password: !!password, 
+                profession: !!profession 
+            });
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required"
+            });
+        }
+        
+        // Validate email format
+        const emailRegex = /^\S+@\S+\.\S+$/;
+        if (!emailRegex.test(email)) {
+            console.log("Invalid email format:", email);
+            return res.status(400).json({
+                success: false,
+                message: "Please provide a valid email address"
+            });
+        }
+        
+        // Validate username length
+        if (username.length < 3 || username.length > 30) {
+            console.log("Invalid username length:", username.length);
+            return res.status(400).json({
+                success: false,
+                message: "Username must be between 3 and 30 characters"
+            });
+        }
+        
+        // Validate password strength
+        if (password.length < 6) {
+            console.log("Password too short");
+            return res.status(400).json({
+                success: false,
+                message: "Password must be at least 6 characters long"
+            });
+        }
         
         // Check if user already exists
         const existingUser = await User.findOne({ 
@@ -12,6 +55,7 @@ export const registerUser = async (req, res) => {
         });
         
         if (existingUser) {
+            console.log("User already exists:", existingUser.email === email ? "Email taken" : "Username taken");
             return res.status(400).json({
                 success: false,
                 message: existingUser.email === email 
@@ -20,40 +64,32 @@ export const registerUser = async (req, res) => {
             });
         }
         
-        // Choose an avatar based on username (deterministic)
-        // This ensures the same username always gets the same avatar
-        const animalAvatars = [
-            // Bear avatars
-            'https://api.dicebear.com/7.x/bottts/svg?seed=bear1&backgroundColor=b6e3f4',
-            'https://api.dicebear.com/7.x/bottts/svg?seed=bear2&backgroundColor=d1d4f9',
+        // Choose an avatar
+        let userAvatar = '';
+        try {
+            // Choose an avatar based on username (deterministic)
+            const animalAvatars = [
+                // Local avatars that will always work
+                '/avatars/default.png',
+                '/avatars/user1.png',
+                '/avatars/user2.png',
+                
+                // External avatars from dicebear API
+                'https://api.dicebear.com/7.x/bottts/svg?seed=bear1&backgroundColor=b6e3f4',
+                'https://api.dicebear.com/7.x/bottts/svg?seed=bear2&backgroundColor=d1d4f9',
+                'https://api.dicebear.com/7.x/bottts/svg?seed=cat1&backgroundColor=c0aede',
+                'https://api.dicebear.com/7.x/bottts/svg?seed=cat2&backgroundColor=ffdfbf',
+                'https://api.dicebear.com/7.x/bottts/svg?seed=dog1&backgroundColor=ffd5dc',
+                'https://api.dicebear.com/7.x/bottts/svg?seed=dog2&backgroundColor=c0aede'
+            ];
             
-            // Cat avatars
-            'https://api.dicebear.com/7.x/bottts/svg?seed=cat1&backgroundColor=c0aede',
-            'https://api.dicebear.com/7.x/bottts/svg?seed=cat2&backgroundColor=ffdfbf',
-            
-            // Dog avatars
-            'https://api.dicebear.com/7.x/bottts/svg?seed=dog1&backgroundColor=ffd5dc',
-            'https://api.dicebear.com/7.x/bottts/svg?seed=dog2&backgroundColor=c0aede',
-            
-            // Fox avatars
-            'https://api.dicebear.com/7.x/bottts/svg?seed=fox1&backgroundColor=ffdfbf',
-            'https://api.dicebear.com/7.x/bottts/svg?seed=fox2&backgroundColor=d1d4f9',
-            
-            // Rabbit avatars
-            'https://api.dicebear.com/7.x/bottts/svg?seed=rabbit1&backgroundColor=b6e3f4',
-            'https://api.dicebear.com/7.x/bottts/svg?seed=rabbit2&backgroundColor=ffd5dc',
-            
-            // Lion avatars
-            'https://api.dicebear.com/7.x/bottts/svg?seed=lion1&backgroundColor=d1d4f9',
-            'https://api.dicebear.com/7.x/bottts/svg?seed=lion2&backgroundColor=c0aede',
-
-            // Panda avatars
-            'https://api.dicebear.com/7.x/bottts/svg?seed=panda1&backgroundColor=b6e3f4',
-            'https://api.dicebear.com/7.x/bottts/svg?seed=panda2&backgroundColor=d1d4f9'
-        ];
-        
-        const avatarIndex = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % animalAvatars.length;
-        const userAvatar = animalAvatars[avatarIndex];
+            const avatarIndex = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % animalAvatars.length;
+            userAvatar = animalAvatars[avatarIndex];
+            console.log("Avatar selected:", userAvatar);
+        } catch (error) {
+            console.error("Error selecting avatar, using default:", error);
+            userAvatar = '/avatars/default.png';
+        }
         
         // Create new user
         const user = new User({
@@ -108,16 +144,20 @@ export const registerUser = async (req, res) => {
         });
         
         // Save user to database
+        console.log("Saving new user to database");
         await user.save();
+        console.log("User saved successfully");
         
         // Generate token
         const token = user.generateAuthToken();
+        console.log("Generated authentication token");
         
-        // Set token in cookie
+        // Set token in cookie with CORS-friendly settings
         res.cookie('token', token, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000, // 1 day
-            secure: process.env.NODE_ENV === 'production'
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
         });
         
         // Prepare user object for response
@@ -136,6 +176,8 @@ export const registerUser = async (req, res) => {
             progress: user.progress || []
         };
         
+        console.log("Registration successful for:", email);
+        
         return res.status(201).json({
             success: true,
             message: "User registered successfully",
@@ -143,7 +185,26 @@ export const registerUser = async (req, res) => {
             token
         });
     } catch (error) {
-        console.error("Error registering user:", error);
+        console.error("Error registering user:", error.message, error.stack);
+        
+        // Handle MongoDB duplicate key error
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyValue)[0];
+            return res.status(400).json({
+                success: false,
+                message: `${field === 'email' ? 'Email' : 'Username'} already in use`
+            });
+        }
+        
+        // Handle validation errors
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(val => val.message);
+            return res.status(400).json({
+                success: false,
+                message: messages[0]
+            });
+        }
+        
         return res.status(500).json({
             success: false,
             message: "Error registering user",
@@ -155,20 +216,35 @@ export const registerUser = async (req, res) => {
 // Login user
 export const loginUser = async (req, res) => {
     try {
+        console.log("Login attempt:", req.body.email);
         const { email, password } = req.body;
+        
+        if (!email || !password) {
+            console.log("Missing credentials:", { email: !!email, password: !!password });
+            return res.status(400).json({
+                success: false,
+                message: "Email and password are required"
+            });
+        }
         
         // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
+            console.log("User not found:", email);
             return res.status(401).json({
                 success: false,
                 message: "Invalid email or password"
             });
         }
         
+        console.log("User found, checking password");
+        
         // Check password
         const isPasswordValid = await user.comparePassword(password);
+        console.log("Password validation result:", isPasswordValid);
+        
         if (!isPasswordValid) {
+            console.log("Invalid password for user:", email);
             return res.status(401).json({
                 success: false,
                 message: "Invalid email or password"
@@ -190,42 +266,45 @@ export const loginUser = async (req, res) => {
             streakUpdate = 1;
         }
         
+        // Generate token
+        const token = user.generateAuthToken();
+        console.log("Generated auth token");
+        
         // Update the user with findByIdAndUpdate to bypass validation
-        await User.findByIdAndUpdate(user._id, {
+        const updatedUser = await User.findByIdAndUpdate(user._id, {
             lastLoginDate: currentDate,
             streak: streakUpdate
         }, { 
             new: true,
-            runValidators: false // Disable validators
+            runValidators: false
         });
+        console.log("Updated user streak and last login");
         
-        // Generate token
-        const token = user.generateAuthToken();
-        
-        // Set token in cookie
+        // Set token in cookie (with cors-friendly settings)
         res.cookie('token', token, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000, // 1 day
-            secure: process.env.NODE_ENV === 'production'
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
         });
         
-        // Prepare user object for response (using the user object from before the update)
+        // Prepare user object for response
         const userResponse = {
-            id: user._id,
-            username: user.username,
-            email: user.email,
-            profession: user.profession,
-            avatar: user.avatar,
-            level: user.level,
-            xp: user.xp,
-            completedQuizzes: user.completedQuizzes || 0,
-            streak: streakUpdate, // Use the updated streak value
-            lastPlayed: user.lastPlayed,
-            accuracy: user.accuracy || 0,
-            achievements: user.achievements || [],
-            recentGames: user.recentGames || [],
-            progress: user.progress || []
+            id: updatedUser._id,
+            username: updatedUser.username,
+            email: updatedUser.email,
+            profession: updatedUser.profession,
+            avatar: updatedUser.avatar,
+            level: updatedUser.level,
+            xp: updatedUser.xp,
+            completedQuizzes: updatedUser.completedQuizzes,
+            streak: updatedUser.streak,
+            achievements: updatedUser.achievements,
+            recentGames: updatedUser.recentGames,
+            progress: updatedUser.progress || []
         };
+        
+        console.log("Login successful for:", email);
         
         return res.status(200).json({
             success: true,
@@ -234,10 +313,10 @@ export const loginUser = async (req, res) => {
             token
         });
     } catch (error) {
-        console.error("Error logging in:", error);
+        console.error("Error during login:", error.message, error.stack);
         return res.status(500).json({
             success: false,
-            message: "Error logging in",
+            message: "Error during login. Please try again.",
             error: error.message
         });
     }

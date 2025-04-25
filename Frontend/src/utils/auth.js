@@ -5,52 +5,45 @@ const API_URL = 'https://healthquestgame.onrender.com/api';
 
 console.log('USING API URL:', API_URL); // Log the API URL for debugging
 
-// Add request interceptor for debugging
-axios.interceptors.request.use(
-  (config) => {
-    console.log('REQUEST URL:', config.url);
-    return config;
-  },
-  (error) => {
-    console.error('REQUEST ERROR:', error);
-    return Promise.reject(error);
-  }
-);
-
-// Add response interceptor for debugging
-axios.interceptors.response.use(
-  (response) => {
-    console.log('RESPONSE:', response.status, response.config.url);
-    return response;
-  },
-  (error) => {
-    console.error('RESPONSE ERROR:', 
-      error.response?.status, 
-      error.response?.data, 
-      error.config?.url
-    );
-    return Promise.reject(error);
-  }
-);
-
 // Create a custom axios instance for API calls
 const apiClient = axios.create({
   baseURL: API_URL,
-  withCredentials: true, // Set to true to allow cookies
+  withCredentials: true, // Enable cookies for cross-origin requests
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   }
 });
 
-// Add request interceptor for the apiClient
+// Add request interceptor for debugging
 apiClient.interceptors.request.use(
   (config) => {
-    console.log('API CLIENT REQUEST:', config.url);
+    console.log('API CLIENT REQUEST:', config.url, 'with credentials:', config.withCredentials);
     return config;
   },
   (error) => {
-    console.error('API CLIENT ERROR:', error);
+    console.error('API CLIENT REQUEST ERROR:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor for debugging
+apiClient.interceptors.response.use(
+  (response) => {
+    console.log('API CLIENT RESPONSE:', response.status, response.config.url);
+    return response;
+  },
+  (error) => {
+    // Extract detailed error information
+    const errorInfo = {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      url: error.config?.url,
+      method: error.config?.method,
+    };
+    
+    console.error('API CLIENT RESPONSE ERROR:', JSON.stringify(errorInfo, null, 2));
     return Promise.reject(error);
   }
 );
@@ -59,12 +52,11 @@ apiClient.interceptors.request.use(
 export const setAuthToken = (token) => {
   if (token) {
     apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    // Also set it on the global axios for any non-apiClient requests
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    localStorage.setItem('token', token);
     console.log('Auth token set successfully');
   } else {
     delete apiClient.defaults.headers.common['Authorization'];
-    delete axios.defaults.headers.common['Authorization'];
+    localStorage.removeItem('token');
     console.log('Auth token removed');
   }
 };
@@ -72,10 +64,10 @@ export const setAuthToken = (token) => {
 // Login user
 export const loginUser = async (credentials) => {
   try {
-    console.log('Attempting login with:', { email: credentials.email });
-    const response = await apiClient.post('/users/login', credentials);
+    console.log('Attempting login with:', credentials.email);
     
-    console.log('Login response:', response.data);
+    const response = await apiClient.post('/users/login', credentials);
+    console.log('Login response received:', response.status);
     
     if (response.data.success) {
       // Save to localStorage
@@ -88,23 +80,45 @@ export const loginUser = async (credentials) => {
       return { success: true, data: response.data };
     }
     
-    return { success: false, message: response.data.message || 'Login failed' };
-  } catch (error) {
-    console.error('Login error details:', error);
     return { 
       success: false, 
-      message: error.response?.data?.message || 'Login failed. Please try again.' 
+      message: response.data.message || 'Login failed' 
     };
+  } catch (error) {
+    console.error('Login error details:', error.message);
+    
+    // Handle different error scenarios
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      return { 
+        success: false, 
+        message: error.response.data?.message || `Login failed (${error.response.status})` 
+      };
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('No response received:', error.request);
+      return { 
+        success: false, 
+        message: 'Unable to connect to server. Please check your internet connection.'
+      };
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      return { 
+        success: false, 
+        message: error.message || 'Login request failed. Please try again.'
+      };
+    }
   }
 };
 
 // Register user
 export const registerUser = async (userData) => {
   try {
-    console.log('Attempting registration with:', { email: userData.email, username: userData.username });
-    const response = await apiClient.post('/users/register', userData);
+    console.log('Attempting registration for:', userData.email);
     
-    console.log('Registration response:', response.data);
+    const response = await apiClient.post('/users/register', userData);
+    console.log('Registration response received:', response.status);
     
     if (response.data.success) {
       // Save to localStorage
@@ -117,13 +131,35 @@ export const registerUser = async (userData) => {
       return { success: true, data: response.data };
     }
     
-    return { success: false, message: response.data.message || 'Registration failed' };
-  } catch (error) {
-    console.error('Registration error details:', error);
     return { 
       success: false, 
-      message: error.response?.data?.message || 'Registration failed. Please try again.' 
+      message: response.data.message || 'Registration failed' 
     };
+  } catch (error) {
+    console.error('Registration error details:', error.message);
+    
+    // Handle different error scenarios
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      return { 
+        success: false, 
+        message: error.response.data?.message || `Registration failed (${error.response.status})`
+      };
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('No response received:', error.request);
+      return { 
+        success: false, 
+        message: 'Unable to connect to server. Please check your internet connection.'
+      };
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      return { 
+        success: false, 
+        message: error.message || 'Registration request failed. Please try again.'
+      };
+    }
   }
 };
 
