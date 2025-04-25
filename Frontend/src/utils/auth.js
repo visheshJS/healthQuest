@@ -157,21 +157,118 @@ export const updateUserProgress = async (progressData) => {
       return { success: false, message: 'User data not available' };
     }
     
+    // Calculate earned XP based on score/performance
+    const earnedXP = progressData.earnedXP || Math.max(5, Math.floor(progressData.score / 10));
+    
+    // Handle achievements
+    const existingAchievements = currentUser.achievements || [];
+    const updatedAchievements = [...existingAchievements];
+    const newAchievements = [];
+    
+    // Check for achievements based on the game data
+    if (progressData.score >= 80) {
+      // "High Score" achievement
+      const highScoreAchievement = updatedAchievements.find(a => a.id === 'high_score');
+      if (highScoreAchievement && !highScoreAchievement.achieved) {
+        highScoreAchievement.achieved = true;
+        highScoreAchievement.dateEarned = new Date().toISOString();
+        newAchievements.push(highScoreAchievement);
+      }
+    }
+    
+    if (progressData.noMistakes) {
+      // "Flawless" achievement - Complete a quiz without losing a life
+      const flawlessAchievement = updatedAchievements.find(a => a.id === 'no_mistakes');
+      if (flawlessAchievement && !flawlessAchievement.achieved) {
+        flawlessAchievement.achieved = true;
+        flawlessAchievement.dateEarned = new Date().toISOString();
+        newAchievements.push(flawlessAchievement);
+      }
+    }
+    
+    // "First Steps" achievement - Complete your first quiz
+    const firstStepsAchievement = updatedAchievements.find(a => a.id === 'first_steps');
+    if (firstStepsAchievement && !firstStepsAchievement.achieved) {
+      firstStepsAchievement.achieved = true;
+      firstStepsAchievement.dateEarned = new Date().toISOString();
+      newAchievements.push(firstStepsAchievement);
+    }
+    
+    // Check for Quiz Master achievement - Complete 10 quizzes
+    if ((currentUser.completedQuizzes || 0) + 1 >= 10) {
+      const quizMasterAchievement = updatedAchievements.find(a => a.id === 'quiz_master');
+      if (quizMasterAchievement && !quizMasterAchievement.achieved) {
+        quizMasterAchievement.achieved = true;
+        quizMasterAchievement.dateEarned = new Date().toISOString();
+        newAchievements.push(quizMasterAchievement);
+      }
+    }
+    
+    // Check for streak achievements
+    let currentStreak = currentUser.streak || 0;
+    const lastPlayed = currentUser.lastPlayed ? new Date(currentUser.lastPlayed) : null;
+    const today = new Date();
+    
+    // If last played was yesterday, increment streak
+    if (lastPlayed) {
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      if (lastPlayed.toDateString() === yesterday.toDateString()) {
+        currentStreak += 1;
+      } else if (lastPlayed.toDateString() !== today.toDateString()) {
+        // If not played yesterday or today, reset streak
+        currentStreak = 1;
+      }
+    } else {
+      // First time playing
+      currentStreak = 1;
+    }
+    
+    // Weekly streak achievement
+    if (currentStreak >= 7) {
+      const weeklyStreakAchievement = updatedAchievements.find(a => a.id === 'weekly_streak');
+      if (weeklyStreakAchievement && !weeklyStreakAchievement.achieved) {
+        weeklyStreakAchievement.achieved = true;
+        weeklyStreakAchievement.dateEarned = new Date().toISOString();
+        newAchievements.push(weeklyStreakAchievement);
+      }
+    }
+    
+    // Monthly streak achievement
+    if (currentStreak >= 30) {
+      const monthlyStreakAchievement = updatedAchievements.find(a => a.id === 'monthly_streak');
+      if (monthlyStreakAchievement && !monthlyStreakAchievement.achieved) {
+        monthlyStreakAchievement.achieved = true;
+        monthlyStreakAchievement.dateEarned = new Date().toISOString();
+        newAchievements.push(monthlyStreakAchievement);
+      }
+    }
+    
+    // Prepare the recent game data
+    const newGame = {
+      id: Date.now().toString(),
+      type: progressData.type,
+      score: progressData.score,
+      difficulty: progressData.difficulty || 'medium',
+      questionsAttempted: progressData.questionsAttempted || 10,
+      correctAnswers: progressData.correctAnswers || Math.floor(progressData.score / 10),
+      xp: earnedXP,
+      timestamp: new Date().toISOString()
+    };
+    
+    // Get existing recent games and add new one at the beginning
+    const existingGames = currentUser.recentGames || [];
+    const updatedGames = [newGame, ...existingGames].slice(0, 10); // Keep only most recent 10 games
+    
     // Prepare data to send to the server
     const updatedUserData = {
-      xp: currentUser.xp + (progressData.earnedXP || 5), // Add earned XP to current XP
+      xp: currentUser.xp + earnedXP,
       completedQuizzes: (currentUser.completedQuizzes || 0) + 1,
-      streak: currentUser.streak || 0,
+      streak: currentStreak,
       lastPlayed: new Date().toISOString(),
-      
-      // Add the new game to recent games
-      recentGames: [{
-        id: Date.now().toString(),
-        type: progressData.type,
-        score: progressData.score,
-        xp: progressData.earnedXP || 5,
-        timestamp: new Date().toISOString()
-      }]
+      achievements: updatedAchievements,
+      recentGames: updatedGames
     };
     
     console.log('Updating user progress with:', updatedUserData);
@@ -194,15 +291,23 @@ export const updateUserProgress = async (progressData) => {
     
     // Update the user in localStorage with the updated data
     if (response.data && response.data.user) {
-      // Merge the response with the existing user data to ensure we don't lose any fields
-      const updatedUser = { ...currentUser, ...response.data.user };
+      // Create a complete updated user object by merging current data with response
+      const updatedUser = { 
+        ...currentUser, 
+        ...response.data.user,
+        // Make sure these specific arrays are updated
+        achievements: updatedAchievements,
+        recentGames: updatedGames
+      };
+      
       localStorage.setItem('user', JSON.stringify(updatedUser));
       
-      // Return the updated data with earned XP
+      // Return the updated data with earned XP and new achievements
       return {
         success: true,
-        earnedXP: progressData.earnedXP || 5,
+        earnedXP: earnedXP,
         user: updatedUser,
+        newAchievements: newAchievements.length > 0 ? newAchievements : null,
         message: 'Progress updated successfully'
       };
     }
@@ -218,11 +323,26 @@ export const updateUserProgress = async (progressData) => {
     if (currentUser) {
       const earnedXP = progressData.earnedXP || Math.floor(Math.random() * 20) + 5;
       
+      // Create a new recent game entry
+      const newGame = {
+        id: Date.now().toString(),
+        type: progressData.type,
+        score: progressData.score || 0,
+        difficulty: progressData.difficulty || 'medium',
+        xp: earnedXP,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Add to recent games
+      const existingGames = currentUser.recentGames || [];
+      const updatedGames = [newGame, ...existingGames].slice(0, 10);
+      
       // Update local user data even in offline mode
       const updatedUser = {
         ...currentUser,
         xp: currentUser.xp + earnedXP,
-        completedQuizzes: (currentUser.completedQuizzes || 0) + 1
+        completedQuizzes: (currentUser.completedQuizzes || 0) + 1,
+        recentGames: updatedGames
       };
       
       localStorage.setItem('user', JSON.stringify(updatedUser));

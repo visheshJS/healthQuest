@@ -318,28 +318,28 @@ const MedicalTrivia = () => {
     <div className="fixed top-0 left-0 right-0 bg-teal-900/95 backdrop-blur-md border-b border-teal-700/50 shadow-lg z-50">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-3">
-            <Brain className="w-7 h-7 text-teal-300" />
-            <span className="text-2xl font-russo text-teal-300 tracking-wider">
+          <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
+            <Brain className="w-6 h-6 sm:w-7 sm:h-7 text-teal-300" />
+            <span className="text-xl sm:text-2xl font-russo text-teal-300 tracking-wider">
               MEDICAL<span className="text-white">TRIVIA</span>
             </span>
           </Link>
           {!isLoading && !gameOver && (
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-2 bg-teal-800/80 rounded-lg px-4 py-2">
-                <Timer className="w-5 h-5 text-teal-300" />
-                <span className="text-white font-mono text-xl">{formatTime(timeLeft)}</span>
+            <div className="flex items-center space-x-1 sm:space-x-3">
+              <div className="flex items-center space-x-1 sm:space-x-2 bg-teal-800/80 rounded-lg px-2 sm:px-4 py-1 sm:py-2">
+                <Timer className="w-4 h-4 sm:w-5 sm:h-5 text-teal-300" />
+                <span className="text-white font-mono text-sm sm:text-xl">{formatTime(timeLeft)}</span>
               </div>
-              <div className="flex items-center space-x-2 bg-teal-800/80 rounded-lg px-4 py-2">
-                <Trophy className="w-5 h-5 text-teal-300" />
-                <span className="text-white font-bold">{score}</span>
+              <div className="flex items-center space-x-1 sm:space-x-2 bg-teal-800/80 rounded-lg px-2 sm:px-4 py-1 sm:py-2">
+                <Trophy className="w-4 h-4 sm:w-5 sm:h-5 text-teal-300" />
+                <span className="text-white text-sm sm:text-base font-bold">{score}</span>
               </div>
-              <div className="flex items-center space-x-2 bg-teal-800/80 rounded-lg px-3 py-2">
-                <span className="text-white font-bold">{currentQuestionIndex + 1}/{questions.length}</span>
+              <div className="flex items-center space-x-1 sm:space-x-2 bg-teal-800/80 rounded-lg px-2 sm:px-3 py-1 sm:py-2">
+                <span className="text-white text-xs sm:text-base font-bold">{currentQuestionIndex + 1}/{questions.length}</span>
               </div>
               <Link to="/dashboard">
-                <div className="flex items-center space-x-2 hover:bg-teal-800/80 rounded-lg px-4 py-2 transition-all duration-300">
-                  <Home className="w-5 h-5 text-teal-300" />
+                <div className="flex items-center space-x-1 sm:space-x-2 hover:bg-teal-800/80 rounded-lg px-2 sm:px-4 py-1 sm:py-2 transition-all duration-300">
+                  <Home className="w-4 h-4 sm:w-5 sm:h-5 text-teal-300" />
                 </div>
               </Link>
             </div>
@@ -357,10 +357,10 @@ const MedicalTrivia = () => {
           quantity={30}
         />
         <Header />
-        <div className="flex items-center justify-center flex-grow">
-          <div className="text-2xl text-teal-300 flex items-center">
-            <Brain className="w-8 h-8 text-teal-300 animate-pulse mr-3" />
-            <span className="animate-pulse">Loading trivia questions...</span>
+        <div className="flex items-center justify-center flex-grow p-4">
+          <div className="text-lg sm:text-2xl text-teal-300 flex flex-col sm:flex-row items-center">
+            <Brain className="w-6 h-6 sm:w-8 sm:h-8 text-teal-300 animate-pulse mb-2 sm:mb-0 sm:mr-3" />
+            <span className="animate-pulse text-center">Loading trivia questions...</span>
           </div>
         </div>
       </div>
@@ -375,22 +375,22 @@ const MedicalTrivia = () => {
           quantity={30}
         />
         <Header />
-        <div className="flex flex-col items-center justify-center flex-grow p-6 pt-24">
-          <div className="game-card p-8 shadow-2xl max-w-lg w-full text-center transform hover:scale-105 transition-all duration-300">
-            <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-            <h2 className="text-4xl font-russo mb-6 text-teal-300">Trivia Complete!</h2>
-            <div className="space-y-4 mb-8">
-              <p className="text-2xl text-white">Final Score: <span className="text-teal-300">{score}</span></p>
-              <p className="text-xl text-white">Questions: <span className="text-teal-300">{currentQuestionIndex + 1}/{questions.length}</span></p>
-              <p className="text-xl text-white">Correct Answers: <span className="text-teal-300">~{Math.round(score / 100)}</span></p>
+        <div className="flex flex-col items-center justify-center flex-grow p-4 sm:p-6 pt-20 sm:pt-24">
+          <div className="game-card p-4 sm:p-8 shadow-2xl max-w-lg w-full text-center transform hover:scale-105 transition-all duration-300">
+            <Trophy className="w-12 h-12 sm:w-16 sm:h-16 text-yellow-400 mx-auto mb-3 sm:mb-4" />
+            <h2 className="text-2xl sm:text-4xl font-russo mb-4 sm:mb-6 text-teal-300">Trivia Complete!</h2>
+            <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+              <p className="text-xl sm:text-2xl text-white">Final Score: <span className="text-teal-300">{score}</span></p>
+              <p className="text-base sm:text-xl text-white">Questions: <span className="text-teal-300">{currentQuestionIndex + 1}/{questions.length}</span></p>
+              <p className="text-base sm:text-xl text-white">Correct Answers: <span className="text-teal-300">~{Math.round(score / 100)}</span></p>
               
-              <div className="mt-4 p-4 bg-teal-800/50 rounded-lg">
-                <p className="text-lg text-white">Performance: <span className="text-yellow-400 font-bold text-xl">
+              <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-teal-800/50 rounded-lg">
+                <p className="text-base sm:text-lg text-white">Performance: <span className="text-yellow-400 font-bold text-lg sm:text-xl">
                   {score >= 800 ? 'Medical Expert!' :
                     score >= 600 ? 'Medical Professional!' :
                     score >= 400 ? 'Medical Student!' : 'Medical Novice'}
                 </span></p>
-                <p className="text-sm text-teal-300">
+                <p className="text-xs sm:text-sm text-teal-300">
                   {score >= 800 ? 'Your knowledge is exceptional!' :
                     score >= 600 ? 'Very impressive knowledge!' :
                     score >= 400 ? 'Good foundation of knowledge!' : 'Keep learning and you\'ll improve!'}
@@ -398,13 +398,13 @@ const MedicalTrivia = () => {
               </div>
             </div>
             
-            <div className="space-y-4">
-              <div className="flex gap-3 justify-center flex-wrap">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex gap-2 sm:gap-3 justify-center flex-wrap">
                 <button 
                   onClick={() => {
                     setDifficultyLevel('easy');
                   }}
-                  className={`px-4 py-2 rounded-lg transition ${
+                  className={`px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg transition ${
                     difficultyLevel === 'easy' ? 'bg-green-600 text-white' : 'bg-teal-800/70 text-teal-300 hover:bg-teal-700/70'
                   }`}
                 >
@@ -414,7 +414,7 @@ const MedicalTrivia = () => {
                   onClick={() => {
                     setDifficultyLevel('medium');
                   }}
-                  className={`px-4 py-2 rounded-lg transition ${
+                  className={`px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg transition ${
                     difficultyLevel === 'medium' ? 'bg-yellow-600 text-white' : 'bg-teal-800/70 text-teal-300 hover:bg-teal-700/70'
                   }`}
                 >
@@ -424,7 +424,7 @@ const MedicalTrivia = () => {
                   onClick={() => {
                     setDifficultyLevel('hard');
                   }}
-                  className={`px-4 py-2 rounded-lg transition ${
+                  className={`px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg transition ${
                     difficultyLevel === 'hard' ? 'bg-red-600 text-white' : 'bg-teal-800/70 text-teal-300 hover:bg-teal-700/70'
                   }`}
                 >
@@ -434,7 +434,7 @@ const MedicalTrivia = () => {
                   onClick={() => {
                     setDifficultyLevel('mixed');
                   }}
-                  className={`px-4 py-2 rounded-lg transition ${
+                  className={`px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg transition ${
                     difficultyLevel === 'mixed' ? 'bg-purple-600 text-white' : 'bg-teal-800/70 text-teal-300 hover:bg-teal-700/70'
                   }`}
                 >
@@ -444,14 +444,14 @@ const MedicalTrivia = () => {
               
               <button 
                 onClick={() => initializeGame(difficultyLevel)}
-                className="game-button w-full bg-teal-600 hover:bg-teal-700"
+                className="game-button w-full py-2 text-sm sm:text-base bg-teal-600 hover:bg-teal-700"
               >
                 Play Again
               </button>
               
               <button 
                 onClick={() => navigate('/dashboard')}
-                className="game-button w-full"
+                className="game-button w-full py-2 text-sm sm:text-base"
               >
                 Back to Dashboard
               </button>
@@ -471,37 +471,37 @@ const MedicalTrivia = () => {
         quantity={30}
       />
       <Header />
-      <div className="flex flex-col items-center justify-center flex-grow p-6 pt-24">
+      <div className="flex flex-col items-center justify-center flex-grow p-4 sm:p-6 pt-20 sm:pt-24">
         <div className="w-full max-w-4xl">
-          <div className="mb-8">
+          <div className="mb-4 sm:mb-8">
             <div className="flex justify-between items-center mb-2">
-              <div className={`px-3 py-1 rounded-md ${difficultyToColor[currentQuestion.difficulty] || 'bg-teal-800'} text-white text-sm`}>
+              <div className={`px-2 sm:px-3 py-1 rounded-md ${difficultyToColor[currentQuestion.difficulty] || 'bg-teal-800'} text-white text-xs sm:text-sm`}>
                 {currentQuestion.difficulty.charAt(0).toUpperCase() + currentQuestion.difficulty.slice(1)}
               </div>
-              <div className="bg-teal-800/50 rounded-lg px-4 py-1">
-                <p className="text-sm text-teal-300">Question <span className="text-white font-bold">{currentQuestionIndex + 1}/{questions.length}</span></p>
+              <div className="bg-teal-800/50 rounded-lg px-2 sm:px-4 py-1">
+                <p className="text-xs sm:text-sm text-teal-300">Question <span className="text-white font-bold">{currentQuestionIndex + 1}/{questions.length}</span></p>
               </div>
             </div>
             
             {/* Progress Bar */}
-            <div className="w-full bg-teal-800/50 rounded-full h-2.5 mb-6">
+            <div className="w-full bg-teal-800/50 rounded-full h-2 sm:h-2.5 mb-4 sm:mb-6">
               <div 
-                className="bg-teal-500 h-2.5 rounded-full transition-all duration-300" 
+                className="bg-teal-500 h-2 sm:h-2.5 rounded-full transition-all duration-300" 
                 style={{ width: `${((currentQuestionIndex) / questions.length) * 100}%` }}
               ></div>
             </div>
             
             {/* Question Card */}
-            <div className="game-card p-6 md:p-8 shadow-xl mb-6">
-              <h2 className="text-xl md:text-2xl font-semibold text-white mb-6">{currentQuestion.question}</h2>
+            <div className="game-card p-4 sm:p-6 md:p-8 shadow-xl mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-white mb-4 sm:mb-6">{currentQuestion.question}</h2>
               
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {currentQuestion.options.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(option)}
                     disabled={showAnswer}
-                    className={`w-full text-left p-4 rounded-lg transition-all duration-200 ${
+                    className={`w-full text-left p-3 sm:p-4 rounded-lg transition-all duration-200 text-sm sm:text-base ${
                       showAnswer
                         ? option === currentQuestion.correctAnswer
                           ? 'bg-green-600 text-white'
@@ -514,9 +514,6 @@ const MedicalTrivia = () => {
                     }`}
                   >
                     <div className="flex items-center">
-                      <span className="inline-block w-8 h-8 rounded-full bg-teal-700/60 text-center leading-8 mr-3">
-                        {['A', 'B', 'C', 'D', 'E'][index]}
-                      </span>
                       {option}
                     </div>
                   </button>
