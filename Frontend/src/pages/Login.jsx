@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Particles } from '../components/particles'
 import { EyeIcon, EyeOffIcon, Home } from 'lucide-react'
@@ -10,33 +10,47 @@ function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
+  
+  // Clear error message when inputs change
+  useEffect(() => {
+    if (errorMessage) setErrorMessage('');
+  }, [email, password]);
   
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setErrorMessage('')
     
     // Basic validation
     if (!email || !password) {
       toast.error("Please fill in all fields")
+      setErrorMessage("All fields are required")
       return
     }
     
     try {
       setIsLoading(true)
+      console.log('Submitting login form for:', email)
       
       const result = await loginUser({
         email,
         password
       })
       
+      console.log('Login result:', result)
+      
       if (result.success) {
         toast.success("Login successful!")
         navigate('/dashboard')
       } else {
-        toast.error(result.message)
+        console.error('Login failed:', result.message)
+        setErrorMessage(result.message || "Login failed")
+        toast.error(result.message || "Login failed. Please try again.")
       }
     } catch (error) {
       console.error("Login error:", error)
+      setErrorMessage(error.message || "An unexpected error occurred")
       toast.error("Login failed. Please check your credentials.")
     } finally {
       setIsLoading(false)
@@ -73,6 +87,12 @@ function Login() {
         
         <div className="max-w-md mx-auto mt-6 sm:mt-12 p-6 sm:p-8 bg-black/30 backdrop-blur-xl border border-green-500/20 rounded-xl">
           <h2 className="text-2xl sm:text-3xl font-russo text-center mb-6 sm:mb-8 text-green-300">LOGIN</h2>
+          
+          {errorMessage && (
+            <div className="bg-red-900/40 border border-red-500/50 p-3 rounded-lg text-white mb-4">
+              {errorMessage}
+            </div>
+          )}
           
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
             <div>

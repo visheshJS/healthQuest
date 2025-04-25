@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// API base URL - use the local URL for testing
+// API base URL
 const API_URL = 'https://healthquestgame.onrender.com/api';
 
 console.log('USING API URL:', API_URL); // Log the API URL for debugging
@@ -9,7 +9,6 @@ console.log('USING API URL:', API_URL); // Log the API URL for debugging
 axios.interceptors.request.use(
   (config) => {
     console.log('REQUEST URL:', config.url);
-    console.log('REQUEST CONFIG:', config);
     return config;
   },
   (error) => {
@@ -18,10 +17,26 @@ axios.interceptors.request.use(
   }
 );
 
+// Add response interceptor for debugging
+axios.interceptors.response.use(
+  (response) => {
+    console.log('RESPONSE:', response.status, response.config.url);
+    return response;
+  },
+  (error) => {
+    console.error('RESPONSE ERROR:', 
+      error.response?.status, 
+      error.response?.data, 
+      error.config?.url
+    );
+    return Promise.reject(error);
+  }
+);
+
 // Create a custom axios instance for API calls
 const apiClient = axios.create({
   baseURL: API_URL,
-  withCredentials: false, // Set to false since we're using token auth
+  withCredentials: true, // Set to true to allow cookies
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
@@ -46,16 +61,21 @@ export const setAuthToken = (token) => {
     apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     // Also set it on the global axios for any non-apiClient requests
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    console.log('Auth token set successfully');
   } else {
     delete apiClient.defaults.headers.common['Authorization'];
     delete axios.defaults.headers.common['Authorization'];
+    console.log('Auth token removed');
   }
 };
 
 // Login user
 export const loginUser = async (credentials) => {
   try {
+    console.log('Attempting login with:', { email: credentials.email });
     const response = await apiClient.post('/users/login', credentials);
+    
+    console.log('Login response:', response.data);
     
     if (response.data.success) {
       // Save to localStorage
@@ -68,9 +88,9 @@ export const loginUser = async (credentials) => {
       return { success: true, data: response.data };
     }
     
-    return { success: false, message: 'Login failed' };
+    return { success: false, message: response.data.message || 'Login failed' };
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Login error details:', error);
     return { 
       success: false, 
       message: error.response?.data?.message || 'Login failed. Please try again.' 
@@ -81,7 +101,10 @@ export const loginUser = async (credentials) => {
 // Register user
 export const registerUser = async (userData) => {
   try {
+    console.log('Attempting registration with:', { email: userData.email, username: userData.username });
     const response = await apiClient.post('/users/register', userData);
+    
+    console.log('Registration response:', response.data);
     
     if (response.data.success) {
       // Save to localStorage
@@ -94,9 +117,9 @@ export const registerUser = async (userData) => {
       return { success: true, data: response.data };
     }
     
-    return { success: false, message: 'Registration failed' };
+    return { success: false, message: response.data.message || 'Registration failed' };
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('Registration error details:', error);
     return { 
       success: false, 
       message: error.response?.data?.message || 'Registration failed. Please try again.' 
