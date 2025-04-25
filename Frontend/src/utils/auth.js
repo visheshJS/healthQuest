@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Get API URL from environment or use the deployment URL
-const API_URL = import.meta.env.VITE_API_URL || 'https://healthquest-n0i2.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://healthquest-n0i2.onrender.com';
 console.log('Using API URL:', API_URL);
 
 // Configure axios instance with the correct base URL
@@ -47,7 +47,18 @@ export const login = async (email, password) => {
     // Add detailed logs to help debug the issue
     console.log('Login attempt with:', { email, apiUrl: API_URL });
     
-    const response = await api.post('/users/login', { email, password });
+    // Ensure we're using the full URL with /api path included
+    const fullUrl = `${API_URL.endsWith('/api') ? API_URL : `${API_URL}/api`}/users/login`;
+    console.log('Making request to full URL:', fullUrl);
+    
+    const response = await axios.post(fullUrl, { email, password }, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
+    
     console.log('Login response:', response.data);
     
     if (response.data && response.data.token) {
@@ -71,7 +82,18 @@ export const register = async (userData) => {
     // Add detailed logs to help debug the issue
     console.log('Registration attempt with:', { email: userData.email, apiUrl: API_URL });
     
-    const response = await api.post('/users/register', userData);
+    // Ensure we're using the full URL with /api path included
+    const fullUrl = `${API_URL.endsWith('/api') ? API_URL : `${API_URL}/api`}/users/register`;
+    console.log('Making request to full URL:', fullUrl);
+    
+    const response = await axios.post(fullUrl, userData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
+    
     console.log('Registration response:', response.data);
     
     // If the registration is successful and returns a token, store it same as login
@@ -128,7 +150,19 @@ export const updateUserProgress = async (progressData) => {
       return { success: false, message: 'User not authenticated' };
     }
     
-    const response = await api.post(`/users/${userId}/progress`, progressData);
+    // Ensure we're using the full URL with /api path included
+    const fullUrl = `${API_URL.endsWith('/api') ? API_URL : `${API_URL}/api`}/users/${userId}/progress`;
+    console.log('Making user progress request to:', fullUrl);
+    
+    const token = getToken();
+    const response = await axios.post(fullUrl, progressData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
+      }
+    });
     
     // Update the user in localStorage with the updated data
     if (response.data && response.data.user) {
