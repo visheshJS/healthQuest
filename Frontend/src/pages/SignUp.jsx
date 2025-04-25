@@ -146,10 +146,11 @@ function SignUp() {
                 required
               >
                 <option value="" disabled>Select your profession</option>
-                <option value="doctor">Doctor</option>
-                <option value="nurse">Nurse</option>
-                <option value="student">Medical Student</option>
-                <option value="other">Other Healthcare Professional</option>
+                <option value="Medical Student">Medical Student</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Nurse">Nurse</option>
+                <option value="Other Healthcare Professional">Other Healthcare Professional</option>
+                <option value="Enthusiast">Enthusiast</option>
               </select>
             </div>
             

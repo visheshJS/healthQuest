@@ -1,0 +1,317 @@
+[
+  {
+    "question": "Which of the following is NOT a vital sign?",
+    "options": ["Blood Pressure", "Pupil Dilation", "Heart Rate", "Respiratory Rate"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which part of the brain is primarily responsible for balance and coordination?",
+    "options": ["Cerebrum", "Cerebellum", "Medulla Oblongata", "Hypothalamus"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "What is the normal range for adult body temperature in Celsius?",
+    "options": ["35.0-36.5°C", "36.5-37.5°C", "37.5-38.5°C", "38.5-39.5°C"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following is NOT a function of the liver?",
+    "options": ["Detoxification", "Protein synthesis", "Oxygenation of blood", "Bile production"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which hormone regulates blood glucose levels?",
+    "options": ["Estrogen", "Insulin", "Thyroxine", "Cortisol"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "What is the most common type of stroke?",
+    "options": ["Ischemic stroke", "Hemorrhagic stroke", "Transient ischemic attack", "Embolic stroke"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Which of the following is a symptom of myocardial infarction?",
+    "options": ["Chest pain", "Swollen ankles", "Excessive urination", "Vision changes"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Which bone is NOT part of the axial skeleton?",
+    "options": ["Sternum", "Ribs", "Femur", "Vertebrae"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "What is the primary function of red blood cells?",
+    "options": ["Fight infection", "Transport oxygen", "Blood clotting", "Produce antibodies"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following is NOT a common cause of acute pancreatitis?",
+    "options": ["Gallstones", "Alcoholism", "Diabetes", "Hyperlipidemia"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which virus causes chickenpox?",
+    "options": ["Herpes simplex virus", "Varicella-zoster virus", "Epstein-Barr virus", "Human papillomavirus"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following is the correct order of heart chambers through which blood flows?",
+    "options": ["Right atrium, right ventricle, left atrium, left ventricle", "Left atrium, left ventricle, right atrium, right ventricle", "Right ventricle, right atrium, left ventricle, left atrium", "Left ventricle, left atrium, right ventricle, right atrium"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the most abundant protein in the human body?",
+    "options": ["Keratin", "Collagen", "Albumin", "Hemoglobin"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following conditions is characterized by abnormally high blood pressure?",
+    "options": ["Hypotension", "Hypertension", "Hypoxemia", "Hypercapnia"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following is a function of the kidneys?",
+    "options": ["Digestion of proteins", "Production of insulin", "Filtration of blood", "Storage of glycogen"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which vitamin deficiency causes scurvy?",
+    "options": ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is NOT a symptom of appendicitis?",
+    "options": ["Pain in the lower right abdomen", "Nausea and vomiting", "Fever", "Constipation"],
+    "correctAnswer": 3
+  },
+  {
+    "question": "What is the normal range for resting heart rate in adults?",
+    "options": ["40-60 beats per minute", "60-100 beats per minute", "100-120 beats per minute", "120-140 beats per minute"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following is NOT a part of the central nervous system?",
+    "options": ["Brain", "Spinal cord", "Sciatic nerve", "Ventricles"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which gland produces insulin?",
+    "options": ["Thyroid", "Adrenal", "Pituitary", "Pancreas"],
+    "correctAnswer": 3
+  },
+  {
+    "question": "Which of the following is a vector-borne disease?",
+    "options": ["Tuberculosis", "Malaria", "Pneumonia", "Hepatitis B"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "What is the normal pH range of human blood?",
+    "options": ["6.8 - 7.0", "7.0 - 7.2", "7.35 - 7.45", "7.5 - 7.7"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is NOT a function of the respiratory system?",
+    "options": ["Gas exchange", "Regulating blood pH", "Filtering blood", "Producing sound"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "What is the most common cause of bacterial pneumonia in adults?",
+    "options": ["Streptococcus pneumoniae", "Haemophilus influenzae", "Mycoplasma pneumoniae", "Klebsiella pneumoniae"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "Which of the following is NOT an autoimmune disease?",
+    "options": ["Rheumatoid arthritis", "Type 1 diabetes", "Malaria", "Multiple sclerosis"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is a water-soluble vitamin?",
+    "options": ["Vitamin A", "Vitamin D", "Vitamin E", "Vitamin C"],
+    "correctAnswer": 3
+  },
+  {
+    "question": "What is the main function of the alveoli in the lungs?",
+    "options": ["Filter air", "Warm inhaled air", "Gas exchange", "Produce surfactant only"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which layer of the skin contains blood vessels?",
+    "options": ["Epidermis", "Dermis", "Hypodermis", "Stratum corneum"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "What is the most common type of anemia?",
+    "options": ["Sickle cell anemia", "Pernicious anemia", "Iron deficiency anemia", "Aplastic anemia"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is NOT a risk factor for osteoporosis?",
+    "options": ["Advanced age", "Female gender", "Obesity", "Low calcium intake"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is NOT a function of the lymphatic system?",
+    "options": ["Return excess tissue fluid to the bloodstream", "Defend against infection", "Transport digested fats", "Produce red blood cells"],
+    "correctAnswer": 3
+  },
+  {
+    "question": "What is the name of the membrane that covers the lungs?",
+    "options": ["Pericardium", "Peritoneum", "Pleura", "Meninges"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following hormones is produced by the thyroid gland?",
+    "options": ["Insulin", "Estrogen", "Thyroxine", "Adrenaline"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is a fat-soluble vitamin?",
+    "options": ["Vitamin B12", "Vitamin C", "Vitamin D", "Vitamin B6"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "What is the primary function of platelets in blood?",
+    "options": ["Transport oxygen", "Fight infection", "Blood clotting", "Regulate body temperature"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is NOT a common cause of cirrhosis?",
+    "options": ["Chronic alcoholism", "Hepatitis B", "Diabetes mellitus", "Hemochromatosis"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which part of the brain controls involuntary actions like breathing and heart rate?",
+    "options": ["Cerebrum", "Cerebellum", "Medulla oblongata", "Thalamus"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "What is the recommended daily intake of water for adults?",
+    "options": ["1-2 liters", "2-3 liters", "4-5 liters", "6-7 liters"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following is the correct medical term for high blood sugar?",
+    "options": ["Hypoglycemia", "Hyperglycemia", "Glycosuria", "Ketonuria"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which structure connects the stomach to the small intestine?",
+    "options": ["Esophagus", "Pyloric sphincter", "Ileocecal valve", "Cardiac sphincter"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following is the largest organ in the human body?",
+    "options": ["Skin", "Liver", "Brain", "Intestines"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the normal respiratory rate for a resting adult?",
+    "options": ["5-8 breaths per minute", "12-20 breaths per minute", "25-30 breaths per minute", "35-40 breaths per minute"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following blood types is considered the universal donor?",
+    "options": ["A+", "AB+", "O-", "B-"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is NOT a common symptom of diabetes?",
+    "options": ["Increased thirst", "Weight loss", "Frequent urination", "Decreased appetite"],
+    "correctAnswer": 3
+  },
+  {
+    "question": "What is the main function of insulin?",
+    "options": ["Increase blood glucose", "Decrease blood glucose", "Increase blood pressure", "Decrease blood pressure"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which of the following is NOT a cranial nerve?",
+    "options": ["Optic nerve", "Vagus nerve", "Sciatic nerve", "Facial nerve"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "What is the normal range for systolic blood pressure in adults?",
+    "options": ["80-90 mmHg", "90-120 mmHg", "120-139 mmHg", "140-160 mmHg"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following conditions is characterized by inflammation of the joints?",
+    "options": ["Osteoporosis", "Arthritis", "Tendonitis", "Scoliosis"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "What is the most common cause of peptic ulcers?",
+    "options": ["Stress", "Spicy food", "Helicobacter pylori infection", "Excessive alcohol consumption"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is NOT a type of white blood cell?",
+    "options": ["Neutrophil", "Lymphocyte", "Platelet", "Monocyte"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following structures is NOT part of the urinary system?",
+    "options": ["Kidney", "Ureter", "Urethra", "Gallbladder"],
+    "correctAnswer": 3
+  },
+  {
+    "question": "Which of the following is the correct term for difficulty swallowing?",
+    "options": ["Dysphasia", "Dysphagia", "Dysphonia", "Dyspnea"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which heart valve separates the left atrium from the left ventricle?",
+    "options": ["Tricuspid valve", "Pulmonary valve", "Mitral valve", "Aortic valve"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is the primary waste product of protein metabolism?",
+    "options": ["Urea", "Glucose", "Glycogen", "Bilirubin"],
+    "correctAnswer": 0
+  },
+  {
+    "question": "What is the medical term for excessive thirst?",
+    "options": ["Polyphagia", "Polyuria", "Polydipsia", "Polymyalgia"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is a chronic inflammatory bowel disease?",
+    "options": ["Appendicitis", "Diverticulitis", "Crohn's disease", "Gastroenteritis"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which hormone is responsible for stimulating contraction of the uterus during childbirth?",
+    "options": ["Estrogen", "Progesterone", "Oxytocin", "Prolactin"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is NOT typically involved in an allergic reaction?",
+    "options": ["Histamine", "IgE antibodies", "Insulin", "Mast cells"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "What is the primary function of the small intestine?",
+    "options": ["Storage of waste", "Absorption of nutrients", "Production of bile", "Mechanical digestion"],
+    "correctAnswer": 1
+  },
+  {
+    "question": "Which part of the eye contains photoreceptors?",
+    "options": ["Cornea", "Lens", "Retina", "Iris"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which vitamin is essential for blood clotting?",
+    "options": ["Vitamin A", "Vitamin B", "Vitamin K", "Vitamin E"],
+    "correctAnswer": 2
+  },
+  {
+    "question": "Which of the following is NOT a common cause of diarrhea?",
+    "options": ["Viral infection", "Bacterial infection", "Food intolerance", "Dehydration"],
+    "correctAnswer": 3
+  },
+  {
+    "question": "What is the medical term for high blood pressure?",
+    "options": ["Hypotension", "Hypertension", "Hyperglycemia", "Hyperthermia"],
+    "correctAnswer": 1
+  }
+] 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// API base URL - use environment variable if available, otherwise fallback to the hard-coded URL
-const API_URL = process.env.VITE_API_URL || 'https://healthquest-n0i2.onrender.com/api';
+// API base URL - use the local URL for testing
+const API_URL = 'http://localhost:5002/api';
 
 console.log('USING API URL:', API_URL); // Log the API URL for debugging
 

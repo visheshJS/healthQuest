@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+import http from "http";
+import { Server } from "socket.io";
+import setupSocketIO from "./socket/socketHandler.js";
 
 dotenv.config(
     {
@@ -15,26 +18,32 @@ import userRoutes from "./routes/userRoutes.js";
 import gameRoutes from "./routes/gameRoutes.js";
 
 const app = express();
-const port = process.env.PORT || 5000;
-import compression from 'compression';
+const server = http.createServer(app);
 
-// Add before other middleware
-app.use(compression());
-import helmet from 'helmet';
+// Set up Socket.IO with CORS
+const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ["http://localhost:5173"];
+console.log('Allowed origins for Socket.IO:', allowedOrigins);
 
-// Add before other middleware
-app.use(helmet());
+const io = new Server(server, {
+    cors: {
+        origin: allowedOrigins,
+        methods: ["GET", "POST"],
+        credentials: true
+    }
+});
 
+// Log when a socket connection is established or fails
+io.engine.on("connection_error", (err) => {
+  console.log('Socket.io connection error:', err.req.url, err.code, err.message, err.context);
+});
 
+// Initialize Socket.IO handlers
+setupSocketIO(io);
 
 // Middleware
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-    ? process.env.CORS_ORIGIN 
-    : [process.env.CORS_ORIGIN, 'http://localhost:5174', 'http://localhost:5173'],
-    credentials: true,
-    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+    origin: allowedOrigins,
+    credentials: true
 }));
 app.use(express.json());    
 app.use(cookieParser());
@@ -49,6 +58,11 @@ app.get('/', (req, res) => {
     res.json({ message: "Game API is running" });
 });
 
+// Add a route specifically for competitive mode
+app.get('/competitive-mode', (req, res) => {
+    res.json({ message: "Competitive mode server is running" });
+});
+
 connectDB()
 .then(()=>{
     app.on("error",(error)=>{
@@ -56,9 +70,9 @@ connectDB()
         throw error;
     })
     
-    app.listen(port, ()=>{
-        console.log(`server is running at port ${port}`)
-        console.log(`Server is running at http://localhost:${port}`); // Print localhost URL
+    server.listen(process.env.PORT || 5000, ()=>{
+        console.log(`server is running at port ${process.env.PORT || 5000}`)
+        console.log(`Server is running at http://localhost:${process.env.PORT || 5000}`); // Print localhost URL
         
     });
 })

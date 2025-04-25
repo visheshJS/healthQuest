@@ -10,7 +10,10 @@ import DiagnosisDetective from './pages/DiagnosisDetective'
 import AnatomyQuiz from './pages/AnatomyQuiz'
 import MedicalTrivia from './pages/MedicalTrivia'
 import NotFound from './pages/NotFound'
+import CompetitiveMode from './pages/CompetitiveMode'
 
+// Components
+import ErrorBoundary from './components/ErrorBoundary'
 
 function App() {
   return (
@@ -23,6 +26,11 @@ function App() {
         <Route path="/diagnosis-game" element={<DiagnosisDetective />} />
         <Route path="/anatomy-quiz" element={<AnatomyQuiz />} />
         <Route path="/medical-trivia" element={<MedicalTrivia />} />
+        <Route path="/competitive-mode" element={
+          <ErrorBoundary>
+            <CompetitiveMode />
+          </ErrorBoundary>
+        } />
         
         {/* 404 Route */}
         <Route path="*" element={<NotFound />} />

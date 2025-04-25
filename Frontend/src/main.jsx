@@ -16,7 +16,7 @@ import NotFound from './pages/NotFound'
 import AnatomyQuiz from './pages/AnatomyQuiz'
 import DiagnosisDetective from './pages/DiagnosisDetective'
 import MedicalTrivia from './pages/MedicalTrivia'
-
+import CompetitiveMode from './pages/CompetitiveMode'
 // Components
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -84,6 +84,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           element={
             <ProtectedRoute>
               <MedicalTrivia />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/competitive-mode" 
+          element={
+            <ProtectedRoute>
+              <CompetitiveMode />
             </ProtectedRoute>
           } 
         />

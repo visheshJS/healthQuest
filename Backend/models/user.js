@@ -87,45 +87,43 @@ const recentGameSchema = new mongoose.Schema({
 }, { _id: false });
 
 const userSchema = new mongoose.Schema({
-    username: { 
-        type: String, 
-        required: [true, "Username is required"],
+    username: {
+        type: String,
+        required: [true, 'Username is required'],
         unique: true,
         trim: true,
-        minlength: [3, "Username must be at least 3 characters"]
+        minlength: 3,
+        maxlength: 30
     },
-    email: { 
-        type: String, 
-        required: [true, "Email is required"], 
+    email: {
+        type: String,
+        required: [true, 'Email is required'],
         unique: true,
+        trim: true,
         lowercase: true,
-        trim: true,
-        match: [
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            "Please provide a valid email"
-        ]
+        match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
     },
-    password: { 
-        type: String, 
-        required: [true, "Password is required"],
-        minlength: [8, "Password must be at least 8 characters"]
+    password: {
+        type: String,
+        required: [true, 'Password is required'],
+        minlength: 6
     },
     profession: {
         type: String,
-        required: [true, "Profession is required"],
-        enum: ["doctor", "nurse", "student", "other"]
+        enum: ['Medical Student', 'Doctor', 'Nurse', 'Other Healthcare Professional', 'Enthusiast'],
+        default: 'Medical Student'
     },
     avatar: {
         type: String,
-        default: "/avatars/default.png"
-    },
-    level: {
-        type: Number,
-        default: 1
+        default: ''
     },
     xp: {
         type: Number,
         default: 0
+    },
+    level: {
+        type: Number,
+        default: 1
     },
     completedQuizzes: {
         type: Number,
@@ -153,11 +151,55 @@ const userSchema = new mongoose.Schema({
     progress: [progressSchema],
     achievements: [achievementSchema],
     recentGames: [recentGameSchema],
+    gameHistory: [{
+        gameId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Game'
+        },
+        score: Number,
+        date: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+    isBanned: {
+        type: Boolean,
+        default: false
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
+    },
     createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    updatedAt: {
         type: Date,
         default: Date.now
     }
 }, { timestamps: true });
+
+// Method to calculate user level based on XP
+userSchema.methods.calculateLevel = function() {
+    // Simple formula: level = square root of XP / 10 + 1, rounded down
+    this.level = Math.floor(Math.sqrt(this.xp) / 10) + 1;
+    return this.level;
+};
+
+// Pre-save middleware to update level before saving
+userSchema.pre('save', function(next) {
+    // If XP has changed, recalculate level
+    if (this.isModified('xp')) {
+        this.calculateLevel();
+    }
+    next();
+});
 
 // Pre-save hook to hash password
 userSchema.pre("save", async function(next) {

@@ -175,24 +175,29 @@ export const loginUser = async (req, res) => {
             });
         }
         
-        // Update last login date
-        user.lastLoginDate = new Date();
-        
-        // Check streak
-        const oneDayInMs = 24 * 60 * 60 * 1000;
-        const lastLogin = new Date(user.lastLoginDate);
+        // Update last login date and streak directly in the database without validation
         const currentDate = new Date();
+        const lastLogin = user.lastLoginDate || currentDate;
+        const oneDayInMs = 24 * 60 * 60 * 1000;
         const daysSinceLastLogin = Math.floor((currentDate - lastLogin) / oneDayInMs);
         
+        let streakUpdate = user.streak || 0;
         if (daysSinceLastLogin === 1) {
             // If logged in one day after last login, increment streak
-            user.streak += 1;
+            streakUpdate += 1;
         } else if (daysSinceLastLogin > 1) {
             // If more than one day, reset streak
-            user.streak = 1;
+            streakUpdate = 1;
         }
         
-        await user.save();
+        // Update the user with findByIdAndUpdate to bypass validation
+        await User.findByIdAndUpdate(user._id, {
+            lastLoginDate: currentDate,
+            streak: streakUpdate
+        }, { 
+            new: true,
+            runValidators: false // Disable validators
+        });
         
         // Generate token
         const token = user.generateAuthToken();
@@ -204,7 +209,7 @@ export const loginUser = async (req, res) => {
             secure: process.env.NODE_ENV === 'production'
         });
         
-        // Prepare user object for response
+        // Prepare user object for response (using the user object from before the update)
         const userResponse = {
             id: user._id,
             username: user.username,
@@ -214,7 +219,7 @@ export const loginUser = async (req, res) => {
             level: user.level,
             xp: user.xp,
             completedQuizzes: user.completedQuizzes || 0,
-            streak: user.streak || 0,
+            streak: streakUpdate, // Use the updated streak value
             lastPlayed: user.lastPlayed,
             accuracy: user.accuracy || 0,
             achievements: user.achievements || [],

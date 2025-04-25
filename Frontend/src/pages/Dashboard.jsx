@@ -97,6 +97,8 @@ function Dashboard() {
       navigate("/anatomy-quiz");
     } else if (gameType === "trivia") {
       navigate("/medical-trivia");
+    } else if (gameType === "competitive") {
+      navigate("/competitive-mode");
     }
   };
 
@@ -403,7 +405,7 @@ function Dashboard() {
 
           <div
             className="game-card p-4 sm:p-6 cursor-pointer transform hover:scale-105 transition-all duration-300 order-last md:order-none col-span-1 sm:col-span-2 md:col-span-1 mx-auto md:mx-0 w-full sm:w-1/2 md:w-full"
-            onClick={() => handlePlayGame("trivia")}
+            onClick={() => handlePlayGame("competitive")}
           >
             <div className="flex gap-3 sm:gap-4 items-start">
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-r from-purple-400 to-indigo-500 flex items-center justify-center">
