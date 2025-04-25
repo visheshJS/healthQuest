@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API base URL - use the local URL for testing
-const API_URL = 'http://localhost:5002/api';
+const API_URL = 'https://healthquestgame.onrender.com/api';
 
 console.log('USING API URL:', API_URL); // Log the API URL for debugging
 
