@@ -68,8 +68,20 @@ function SignUp() {
       }
     } catch (error) {
       console.error("Registration error details:", error)
-      setErrorMessage(error.message || "An unexpected error occurred")
-      toast.error("Registration failed. Please try again.")
+      
+      // Handle specific error messages from the API
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message || "An error occurred during registration";
+        setErrorMessage(errorMessage)
+        toast.error(errorMessage)
+      } else if (error.message && error.message.includes('Network Error')) {
+        const errorMessage = "Network error. Please check your connection or the server might be down."
+        setErrorMessage(errorMessage)
+        toast.error(errorMessage)
+      } else {
+        setErrorMessage("Registration failed. Please try again with different credentials.")
+        toast.error("Registration failed. Please try again.")
+      }
     } finally {
       setIsLoading(false)
     }

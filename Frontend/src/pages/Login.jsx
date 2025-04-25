@@ -47,8 +47,20 @@ function Login() {
       }
     } catch (error) {
       console.error("Login error:", error)
-      setErrorMessage(error.message || "An unexpected error occurred")
-      toast.error("Login failed. Please check your credentials.")
+      
+      // Handle specific error messages from the API
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message || "An error occurred during login";
+        setErrorMessage(errorMessage)
+        toast.error(errorMessage)
+      } else if (error.message && error.message.includes('Network Error')) {
+        const errorMessage = "Network error. Please check your connection or the server might be down."
+        setErrorMessage(errorMessage)
+        toast.error(errorMessage)
+      } else {
+        setErrorMessage("Login failed. Please check your credentials.")
+        toast.error("Login failed. Please check your credentials.")
+      }
     } finally {
       setIsLoading(false)
     }

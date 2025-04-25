@@ -4,7 +4,7 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL || 'https://healthquest-n0i2.onrender.com/api';
 console.log('Using API URL:', API_URL);
 
-// Configure axios instance
+// Configure axios instance with the correct base URL
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: true, // Enable credentials for auth requests
@@ -13,6 +13,17 @@ const api = axios.create({
     'Accept': 'application/json'
   }
 });
+
+// Add request interceptor to log all outgoing requests (for debugging)
+api.interceptors.request.use(
+  config => {
+    console.log('Making request to:', config.baseURL + config.url);
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
 // Initialize authentication state
 export const initAuth = () => {
@@ -33,17 +44,23 @@ export const initAuth = () => {
 // Handle login
 export const login = async (email, password) => {
   try {
+    // Add detailed logs to help debug the issue
+    console.log('Login attempt with:', { email, apiUrl: API_URL });
+    
     const response = await api.post('/users/login', { email, password });
+    console.log('Login response:', response.data);
     
     if (response.data && response.data.token) {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userId', response.data.user._id);
+      localStorage.setItem('userId', response.data.user._id || response.data.user.id);
       localStorage.setItem('user', JSON.stringify(response.data.user));
     }
     
     return response.data;
   } catch (error) {
-    console.error('Login error:', error.response?.data || error.message);
+    console.error('Login error details:', error);
+    console.error('Login error response:', error.response?.data);
+    console.error('Login error status:', error.response?.status);
     throw error;
   }
 };
@@ -51,18 +68,24 @@ export const login = async (email, password) => {
 // Handle registration
 export const register = async (userData) => {
   try {
+    // Add detailed logs to help debug the issue
+    console.log('Registration attempt with:', { email: userData.email, apiUrl: API_URL });
+    
     const response = await api.post('/users/register', userData);
+    console.log('Registration response:', response.data);
     
     // If the registration is successful and returns a token, store it same as login
     if (response.data && response.data.token) {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userId', response.data.user._id);
+      localStorage.setItem('userId', response.data.user._id || response.data.user.id);
       localStorage.setItem('user', JSON.stringify(response.data.user));
     }
     
     return response.data;
   } catch (error) {
-    console.error('Registration error:', error.response?.data || error.message);
+    console.error('Registration error details:', error);
+    console.error('Registration error response:', error.response?.data);
+    console.error('Registration error status:', error.response?.status);
     throw error;
   }
 };
