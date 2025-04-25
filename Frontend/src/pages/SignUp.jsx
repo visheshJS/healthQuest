@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Particles } from '../components/particles'
 import { EyeIcon, EyeOffIcon, CheckCircle, Home } from 'lucide-react'
-import { registerUser } from '../utils/auth'
+import { register } from '../utils/auth'
 import { toast } from 'react-hot-toast'
 
 function SignUp() {
@@ -49,7 +49,7 @@ function SignUp() {
       setIsLoading(true)
       console.log('Submitting registration form for:', email, username)
       
-      const result = await registerUser({
+      const result = await register({
         username,
         email,
         password,

@@ -54,6 +54,18 @@ const corsOptions = {
 // Apply CORS middleware
 app.use(cors(corsOptions));
 
+// Add preflight handling for all routes
+app.options('*', cors(corsOptions));
+
+// Additional middleware to ensure CORS headers are set
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+
 // Set up Socket.IO with CORS
 const io = new Server(server, {
     cors: {

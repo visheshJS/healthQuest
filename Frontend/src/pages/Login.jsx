@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Particles } from '../components/particles'
 import { EyeIcon, EyeOffIcon, Home } from 'lucide-react'
-import { loginUser } from '../utils/auth'
+import { login } from '../utils/auth'
 import { toast } from 'react-hot-toast'
 
 function Login() {
@@ -33,10 +33,7 @@ function Login() {
       setIsLoading(true)
       console.log('Submitting login form for:', email)
       
-      const result = await loginUser({
-        email,
-        password
-      })
+      const result = await login(email, password)
       
       console.log('Login result:', result)
       

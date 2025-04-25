@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { LogOutIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { logoutUser } from '../utils/auth';
+import { logout } from '../utils/auth';
 
 function LogoutButton({ className = '' }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,14 +11,10 @@ function LogoutButton({ className = '' }) {
   const handleLogout = async () => {
     try {
       setIsLoading(true);
-      const result = await logoutUser();
+      logout();
       
-      if (result.success) {
-        toast.success("Logged out successfully");
-        navigate('/login');
-      } else {
-        toast.error("Logout failed");
-      }
+      toast.success("Logged out successfully");
+      navigate('/login');
     } catch (error) {
       console.error("Logout error:", error);
       toast.error("Logout failed");
