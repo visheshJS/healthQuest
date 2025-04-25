@@ -5,8 +5,8 @@ import { getCurrentUser } from '../utils/auth';
 import { Trophy, Users, Copy, ArrowLeft, CheckCircle, XCircle, AlertCircle, Clock } from 'lucide-react';
 import { Particles } from '../components/particles';
 
-// For local testing
-const API_URL = 'https://healthquestgame.onrender.com/';
+// Update the socket server URL to point to the correct backend
+const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://healthquest-n0i2.onrender.com';
 console.log('Competitive Mode: Using socket server at:', API_URL);
 let socket;
 
@@ -52,149 +52,168 @@ function CompetitiveMode() {
     }
     setUser(userData);
 
-    try {
-      // Initialize socket connection with explicit URL
-      console.log('Connecting to socket at:', API_URL);
-      socket = io(API_URL, {
-        transports: ['websocket', 'polling'],
-        reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
-        timeout: 20000,
-        autoConnect: true
-      });
+    // Socket connection function
+    const connectSocket = () => {
+      try {
+        // Initialize socket connection with explicit URL
+        console.log('Connecting to socket at:', API_URL);
+        socket = io(API_URL, {
+          transports: ['websocket', 'polling'],
+          reconnection: true,
+          reconnectionAttempts: 5,
+          reconnectionDelay: 1000,
+          reconnectionDelayMax: 5000,
+          timeout: 20000,
+          autoConnect: true
+        });
 
-      socket.on('connect', () => {
-        console.log('Successfully connected to server with ID:', socket.id);
-        setConnectionStatus('connected');
-      });
+        socket.on('connect', () => {
+          console.log('Successfully connected to server with ID:', socket.id);
+          setConnectionStatus('connected');
+          setErrorMessage('');
+        });
 
-      socket.on('connect_error', (error) => {
-        console.error('Socket connection error details:', error.message);
-        setErrorMessage(`Unable to connect to game server: ${error.message}. Please try again later.`);
-        setConnectionStatus('error');
-      });
+        socket.on('connect_error', (error) => {
+          console.error('Socket connection error details:', error.message);
+          setErrorMessage(`Unable to connect to game server: ${error.message}. Please try again later.`);
+          setConnectionStatus('error');
+        });
 
-      socket.on('room-created', (data) => {
-        setRoomCode(data.roomCode);
-        setGameState('waiting');
-        setRoomCreator(user.id);
-      });
+        socket.on('disconnect', (reason) => {
+          console.log('Socket disconnected:', reason);
+          if (reason === 'io server disconnect') {
+            // The server has forcefully disconnected the socket
+            setTimeout(() => {
+              socket.connect(); // Manually reconnect
+            }, 1000);
+          }
+          setConnectionStatus('error');
+        });
 
-      socket.on('player-joined', (data) => {
-        setOpponent(data.player);
-        setGameState('ready');
-        
-        // if joining a room, make sure roomCreator is explicitly set to null
-        if (gameState === 'waiting') {
-          // Preserve roomCreator for the host
-        } else {
-          // This player is joining someone else's room
-          setRoomCreator(null);
-        }
-        
-        // Start game after 3 seconds
-        setTimeout(() => {
-          setGameState('playing');
-        }, 3000);
-      });
+        socket.on('room-created', (data) => {
+          setRoomCode(data.roomCode);
+          setGameState('waiting');
+          setRoomCreator(user.id);
+        });
 
-      socket.on('game-started', (data) => {
-        console.log('Game started with data:', data);
-        setQuestions(data.questions);
-        setGameState('playing');
-        
-        // Store the host and guest IDs for more reliable player role determination
-        if (data.hostId && data.guestId) {
-          setRoomCreator(data.hostId);
-        }
-      });
-
-      // Handle opponent leaving
-      socket.on('opponent-left', () => {
-        setOpponentDisconnected(true);
-      });
-
-      // Handle score updates from server
-      socket.on('score-update', (data) => {
-        console.log('Received score-update event with data:', data);
-        
-        // Check if we have valid score data
-        if (typeof data.playerScore === 'number' && typeof data.opponentScore === 'number') {
-          // Update both scores directly from server data
-          setPlayerScore(data.playerScore);
-          setOpponentScore(data.opponentScore);
+        socket.on('player-joined', (data) => {
+          setOpponent(data.player);
+          setGameState('ready');
           
-          // Update player names
-          if (data.playerName) setPlayerName(data.playerName);
-          if (data.opponentName) setOpponentName(data.opponentName);
-          
-          // Set isHost flag
-          if (typeof data.playerIsHost === 'boolean') setIsHost(data.playerIsHost);
-          
-          console.log(`Scores updated via server - Player: ${data.playerScore}, Opponent: ${data.opponentScore}`);
-        } else {
-          console.error('Received score update with invalid data:', data);
-        }
-      });
-
-      // Handle opponent answers - update both the UI and the score
-      socket.on('opponent-answer', (data) => {
-        console.log('Received opponent answer:', data);
-        
-        // Store opponent's answer data for UI feedback
-        setOpponentAnswers((prev) => {
-          // Check if this answer already exists to avoid duplicates
-          const exists = prev.some(a => a.questionIndex === data.questionIndex);
-          if (exists) {
-            console.log('This opponent answer was already recorded, ignoring duplicate');
-            return prev;
+          // if joining a room, make sure roomCreator is explicitly set to null
+          if (gameState === 'waiting') {
+            // Preserve roomCreator for the host
+          } else {
+            // This player is joining someone else's room
+            setRoomCreator(null);
           }
           
-          console.log(`Adding opponent answer for question ${data.questionIndex}, correct: ${data.isCorrect}`);
-          return [...prev, {
-            questionIndex: data.questionIndex,
-            answerIndex: data.answerIndex,
-            isCorrect: data.isCorrect
-          }];
+          // Start game after 3 seconds
+          setTimeout(() => {
+            setGameState('playing');
+          }, 3000);
         });
-        
-        // Update opponent score directly when their answer is correct
-        // This ensures the score updates visually even if server updates fail
-        if (data.isCorrect) {
-          setOpponentScore(prev => prev + 10);
-          console.log(`Directly updating opponent score for correct answer: +10`);
-        }
-        
-        // Request a score update from the server as a backup
-        socket.emit('request-scores', { roomCode });
-      });
 
-      socket.on('next-question', () => {
-        setCurrentQuestion(prev => prev + 1);
-        setSelectedAnswer(null);
-        setTimeLeft(20);
-      });
+        socket.on('game-started', (data) => {
+          console.log('Game started with data:', data);
+          setQuestions(data.questions);
+          setGameState('playing');
+          
+          // Store the host and guest IDs for more reliable player role determination
+          if (data.hostId && data.guestId) {
+            setRoomCreator(data.hostId);
+          }
+        });
 
-      socket.on('game-results', (data) => {
-        setGameState('results');
-        setResults(data);
-      });
+        // Handle opponent leaving
+        socket.on('opponent-left', () => {
+          setOpponentDisconnected(true);
+        });
 
-      socket.on('room-not-found', () => {
-        setErrorMessage('Room not found. Please check the code and try again.');
-      });
+        // Handle score updates from server
+        socket.on('score-update', (data) => {
+          console.log('Received score-update event with data:', data);
+          
+          // Check if we have valid score data
+          if (typeof data.playerScore === 'number' && typeof data.opponentScore === 'number') {
+            // Update both scores directly from server data
+            setPlayerScore(data.playerScore);
+            setOpponentScore(data.opponentScore);
+            
+            // Update player names
+            if (data.playerName) setPlayerName(data.playerName);
+            if (data.opponentName) setOpponentName(data.opponentName);
+            
+            // Set isHost flag
+            if (typeof data.playerIsHost === 'boolean') setIsHost(data.playerIsHost);
+            
+            console.log(`Scores updated via server - Player: ${data.playerScore}, Opponent: ${data.opponentScore}`);
+          } else {
+            console.error('Received score update with invalid data:', data);
+          }
+        });
 
-      socket.on('error-message', (data) => {
-        setErrorMessage(data.message);
-      });
-    } catch (error) {
-      console.error('Error setting up socket connection:', error);
-      setErrorMessage('Unable to connect to game server. Please try again later.');
-      setConnectionStatus('error');
-    }
+        // Handle opponent answers - update both the UI and the score
+        socket.on('opponent-answer', (data) => {
+          console.log('Received opponent answer:', data);
+          
+          // Store opponent's answer data for UI feedback
+          setOpponentAnswers((prev) => {
+            // Check if this answer already exists to avoid duplicates
+            const exists = prev.some(a => a.questionIndex === data.questionIndex);
+            if (exists) {
+              console.log('This opponent answer was already recorded, ignoring duplicate');
+              return prev;
+            }
+            
+            console.log(`Adding opponent answer for question ${data.questionIndex}, correct: ${data.isCorrect}`);
+            return [...prev, {
+              questionIndex: data.questionIndex,
+              answerIndex: data.answerIndex,
+              isCorrect: data.isCorrect
+            }];
+          });
+          
+          // Update opponent score directly when their answer is correct
+          // This ensures the score updates visually even if server updates fail
+          if (data.isCorrect) {
+            setOpponentScore(prev => prev + 10);
+            console.log(`Directly updating opponent score for correct answer: +10`);
+          }
+          
+          // Request a score update from the server as a backup
+          socket.emit('request-scores', { roomCode });
+        });
 
+        socket.on('next-question', () => {
+          setCurrentQuestion(prev => prev + 1);
+          setSelectedAnswer(null);
+          setTimeLeft(20);
+        });
+
+        socket.on('game-results', (data) => {
+          setGameState('results');
+          setResults(data);
+        });
+
+        socket.on('room-not-found', () => {
+          setErrorMessage('Room not found. Please check the code and try again.');
+        });
+
+        socket.on('error-message', (data) => {
+          setErrorMessage(data.message);
+        });
+      } catch (error) {
+        console.error('Error setting up socket connection:', error);
+        setErrorMessage('Unable to connect to game server. Please try again later.');
+        setConnectionStatus('error');
+      }
+    };
+
+    // Initial connection attempt
+    connectSocket();
+
+    // Clean up socket connection on unmount
     return () => {
       if (socket) {
         socket.disconnect();
@@ -694,6 +713,68 @@ function CompetitiveMode() {
     );
   };
 
+  // Add a ConnectionError component for better error handling UI
+  const ConnectionError = () => (
+    <div className="min-h-screen bg-gradient-to-b from-red-900/80 via-red-800/80 to-red-900/80 flex items-center justify-center px-4">
+      <div className="max-w-md w-full bg-black/50 backdrop-blur-xl border border-red-500/30 rounded-xl p-8 text-center">
+        <div className="mb-6 inline-flex justify-center items-center w-16 h-16 rounded-full bg-red-900/50 border border-red-500/30">
+          <AlertCircle className="w-8 h-8 text-red-300" />
+        </div>
+        
+        <h2 className="text-2xl font-russo text-red-300 mb-4">Connection Error</h2>
+        
+        <p className="mb-6 text-white/80">
+          Unable to connect to the game server. This could be because:
+        </p>
+        
+        <ul className="text-left mb-8 space-y-2">
+          <li className="flex items-start">
+            <span className="mr-2 mt-0.5">•</span>
+            <span>The server is currently offline or restarting</span>
+          </li>
+          <li className="flex items-start">
+            <span className="mr-2 mt-0.5">•</span>
+            <span>Your internet connection is interrupted</span>
+          </li>
+          <li className="flex items-start">
+            <span className="mr-2 mt-0.5">•</span>
+            <span>There is a temporary issue with the service</span>
+          </li>
+        </ul>
+        
+        {errorMessage && (
+          <div className="mb-6 p-3 bg-red-900/30 border border-red-500/30 rounded-lg text-sm text-red-100">
+            {errorMessage}
+          </div>
+        )}
+        
+        <div className="space-y-3">
+          <button 
+            onClick={() => {
+              setConnectionStatus('connecting');
+              if (socket) {
+                socket.connect();
+              } else {
+                window.location.reload();
+              }
+            }}
+            className="w-full py-3 bg-gradient-to-b from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold rounded-lg shadow-lg border border-red-500 transition-all"
+          >
+            Try Again
+          </button>
+          
+          <button 
+            onClick={() => navigate('/dashboard')}
+            className="w-full py-3 bg-black/30 hover:bg-black/50 text-white font-bold rounded-lg shadow-md border border-white/20 transition-all flex items-center justify-center"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-900 via-green-800 to-emerald-900 text-white relative overflow-hidden">
       <Particles className="absolute inset-0 z-0" quantity={30} />
@@ -714,46 +795,17 @@ function CompetitiveMode() {
         
         {/* Connection Error */}
         {connectionStatus === 'error' && (
-          <div className="game-card max-w-md mx-auto p-6 text-center">
-            <h1 className="text-3xl font-russo mb-4 text-center text-green-300">Connection Error</h1>
-            
-            <div className="text-center mb-8">
-              <AlertCircle className="inline-block text-red-400 mb-3" size={48} />
-              <p className="text-green-100/70 mb-4">Unable to connect to the game server. This could be because:</p>
-              <ul className="text-left text-sm mb-6 list-disc pl-5">
-                <li className="mb-2">The server is currently offline or restarting</li>
-                <li className="mb-2">Your internet connection is interrupted</li>
-                <li className="mb-2">There is a temporary issue with the service</li>
-              </ul>
-            </div>
-            
-            <button 
-              onClick={() => window.location.reload()}
-              className="game-button py-2 w-full flex items-center justify-center"
-            >
-              Try Again
-            </button>
-            
-            <button 
-              onClick={() => navigate('/dashboard')}
-              className="game-button-small py-2 w-full flex items-center justify-center mt-3"
-            >
-              <ArrowLeft size={16} className="mr-2" />
-              Back to Dashboard
-            </button>
-          </div>
+          <ConnectionError />
         )}
         
         {/* Connecting Status */}
         {connectionStatus === 'connecting' && (
-          <div className="game-card max-w-md mx-auto p-6 text-center">
-            <h1 className="text-3xl font-russo mb-4 text-center text-green-300">Connecting...</h1>
-            
-            <div className="flex justify-center items-center mb-6">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-300"></div>
+          <div className="min-h-screen bg-gradient-to-b from-green-900 via-green-800 to-emerald-900 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin mb-4 h-12 w-12 border-4 border-green-500 border-t-transparent rounded-full mx-auto"></div>
+              <h2 className="text-xl font-russo text-green-300">Connecting to Game Server...</h2>
+              <p className="mt-2 text-white/70">This might take a few moments</p>
             </div>
-            
-            <p className="text-green-100/70 mb-4">Establishing connection to the game server...</p>
           </div>
         )}
         

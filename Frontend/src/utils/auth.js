@@ -150,12 +150,38 @@ export const updateUserProgress = async (progressData) => {
       return { success: false, message: 'User not authenticated' };
     }
     
+    // Get current user data
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+      console.error('User data not found in localStorage');
+      return { success: false, message: 'User data not available' };
+    }
+    
+    // Prepare data to send to the server
+    const updatedUserData = {
+      xp: currentUser.xp + (progressData.earnedXP || 5), // Add earned XP to current XP
+      completedQuizzes: (currentUser.completedQuizzes || 0) + 1,
+      streak: currentUser.streak || 0,
+      lastPlayed: new Date().toISOString(),
+      
+      // Add the new game to recent games
+      recentGames: [{
+        id: Date.now().toString(),
+        type: progressData.type,
+        score: progressData.score,
+        xp: progressData.earnedXP || 5,
+        timestamp: new Date().toISOString()
+      }]
+    };
+    
+    console.log('Updating user progress with:', updatedUserData);
+    
     // Ensure we're using the full URL with /api path included
-    const fullUrl = `${API_URL.endsWith('/api') ? API_URL : `${API_URL}/api`}/users/${userId}/progress`;
+    const fullUrl = `${API_URL.endsWith('/api') ? API_URL : `${API_URL}/api`}/users/update-progress`;
     console.log('Making user progress request to:', fullUrl);
     
     const token = getToken();
-    const response = await axios.post(fullUrl, progressData, {
+    const response = await axios.put(fullUrl, updatedUserData, {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
@@ -164,19 +190,54 @@ export const updateUserProgress = async (progressData) => {
       }
     });
     
+    console.log('Progress update response:', response.data);
+    
     // Update the user in localStorage with the updated data
     if (response.data && response.data.user) {
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      // Merge the response with the existing user data to ensure we don't lose any fields
+      const updatedUser = { ...currentUser, ...response.data.user };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      // Return the updated data with earned XP
+      return {
+        success: true,
+        earnedXP: progressData.earnedXP || 5,
+        user: updatedUser,
+        message: 'Progress updated successfully'
+      };
     }
     
     return response.data;
   } catch (error) {
-    console.error('Error updating user progress:', error.response?.data || error.message);
+    console.error('Error updating user progress:', error);
+    console.error('Error response:', error.response?.data);
+    
     // For now, simulate a successful update for offline play
+    // This allows the game to continue even if the server is unreachable
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+      const earnedXP = progressData.earnedXP || Math.floor(Math.random() * 20) + 5;
+      
+      // Update local user data even in offline mode
+      const updatedUser = {
+        ...currentUser,
+        xp: currentUser.xp + earnedXP,
+        completedQuizzes: (currentUser.completedQuizzes || 0) + 1
+      };
+      
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      return { 
+        success: true, 
+        earnedXP: earnedXP,
+        user: updatedUser,
+        message: 'Progress updated in offline mode'
+      };
+    }
+    
     return { 
-      success: true, 
-      earnedXP: Math.floor(Math.random() * 20) + 5,
-      message: 'Progress updated in offline mode'
+      success: false, 
+      message: 'Failed to update progress'
     };
   }
 };
