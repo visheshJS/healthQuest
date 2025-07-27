@@ -37,7 +37,6 @@
 
 ## 🖼️ Screenshots
 
-> *(Replace these links with your actual image links once hosted)*
 
 ### 📊 Dashboard  
 
